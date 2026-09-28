@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import {Quicksand} from "next/font/google";
+import '@unocss/reset/tailwind.css'
 import "./globals.css";
 
 const quicksand = Quicksand({
@@ -22,7 +23,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <header>
           <nav>
             <a href={"#"}>...news</a>
-            <ul className={"flex gap-4 "}>
+            <ul className={"flex gap-4 [&_.a]:()"}>
               <li><a href={"#"}>Nyheder</a></li>
               <li><a href={"#"}>Sport</a></li>
               <li><a href={"#"}>Vejret</a></li>
