@@ -1,18 +1,120 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   CSS Variables & Design Tokens (Vejledende Designmanual)
+   ========================================================================== */
 :root {
+  /* Colors */
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #000000;
+  --color-primary: #000000;
+  --color-category: #e89700;
+  --color-timestamp: #999999;
+  --color-search-text: #999999;
+  --color-menu-bg: #000000;
+  --color-menu-text: #ffffff;
+  --color-menu-hover: rgba(255, 255, 255, 0.1);
+  --color-menu-active: rgba(255, 255, 255, 0.1);
+
+  /* Typography Sizes */
+  --font-size-hero: 48px;
+  --font-size-news: 32px;
+  --font-size-intro: 24px;
+  --font-size-area: 22px;
+  --font-size-menu-min: 18px;
+  --font-size-menu-max: 24px;
+
+  /* Layout, Grid & Spacing */
+  --container-max-width: 1000px;
+  --grid-gutter: 20px;
+  --column-width: 235px;
+  --column-span-2: 490px;
+  --column-span-3: 730px;
+  --menu-height: 80px;
+  --search-width: 200px;
+  --search-height: 30px;
 }
 
-@theme inline {
+/* ==========================================================================
+   Tailwind CSS v4 Theme Configuration
+   ========================================================================== */
+@theme {
+  /* Font Family */
+  --font-quicksand: var(--font-quicksand), 'Quicksand', sans-serif;
+
+  /* Theme Colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-quicksand: var(--font-quicksand);
+  --color-primary: #000000;
+  --color-category: #e89700;
+  --color-timestamp: #999999;
+  --color-search-text: #999999;
+  --color-menu-bg: #000000;
+  --color-menu-text: #ffffff;
+  --color-menu-hover: rgba(255, 255, 255, 0.1);
+  --color-menu-active: rgba(255, 255, 255, 0.1);
+
+  /* Typography / Font Sizes */
+  --text-hero: 48px;
+  --text-hero--line-height: 1.15;
+  --text-news: 32px;
+  --text-news--line-height: 1.25;
+  --text-intro: 24px;
+  --text-intro--line-height: 1.35;
+  --text-area: 22px;
+  --text-area--line-height: 1.3;
+  --text-menu: 18px;
+  --text-menu--line-height: 1.25;
+  --text-menu-lg: 24px;
+  --text-menu-lg--line-height: 1.25;
+
+  /* Breakpoints:
+     - Mobile: Base (< 768px): 1 column
+     - Tablet: 768px: 2 columns
+     - Desktop: 1000px: 4 columns in 1000px parent container */
+  --breakpoint-tablet: 768px;
+  --breakpoint-desktop: 1000px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1000px;
+
+  /* Spacing & Sizes */
+  --spacing-gutter: 20px;
+  --spacing-menu-h: 80px;
+  --spacing-search-w: 200px;
+  --spacing-search-h: 30px;
+
+  /* Widths */
+  --width-container: 1000px;
+  --width-col: 235px;
+  --width-span-2: 490px;
+  --width-span-3: 730px;
+  --max-width-container: 1000px;
 }
 
+/* ==========================================================================
+   Base Styles
+   ========================================================================== */
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-quicksand), Arial, Helvetica, sans-serif;
+}
+
+/* ==========================================================================
+   Layout Helpers
+   ========================================================================== */
+.parent-container {
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 1000px) {
+  .parent-container {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }

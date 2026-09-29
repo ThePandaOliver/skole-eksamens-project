@@ -1,6 +1,7 @@
 import type {Metadata} from "next";
 import {Quicksand} from "next/font/google";
 import "./globals.css";
+import Navigation from "@/components/Navigation";
 
 const quicksand = Quicksand({
 	variable: "--font-quicksand",
@@ -13,12 +14,6 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({children}: LayoutProps<"/">) {
-	const navItems = [
-		{href: "#", label: "Nyheder"},
-		{href: "#", label: "Sport"},
-		{href: "#", label: "Vejret"},
-		{href: "#", label: "Podcast"}
-	];
 	return (
 		<html
 			lang="en"
@@ -26,17 +21,7 @@ export default function RootLayout({children}: LayoutProps<"/">) {
 		>
 			<body className="min-h-full flex flex-col">
 				<header>
-					<nav className={"flex gap-4 justify-between"}>
-						<a href={"#"}>...news</a>
-						<ul className={"flex gap-4"}>
-							{
-								navItems.map((item) => (
-									<li key={item.label}><a href={item.href}>{item.label}</a></li>
-								))
-							}
-						</ul>
-						<input type="search"/>
-					</nav>
+					<Navigation/>
 				</header>
 				{children}
 			</body>
