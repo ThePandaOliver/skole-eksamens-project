@@ -1,7 +1,11 @@
+"use client"
+
+import AsyncPodcast from "@/component/Podcast";
+
 export default function Page() {
 	return (
-		<div>
-
-		</div>
+		<section className="parent-container">
+			<AsyncPodcast/>
+		</section>
 	)
 }
