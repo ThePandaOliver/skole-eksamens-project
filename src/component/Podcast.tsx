@@ -465,8 +465,7 @@ export function Podcast({
 				</div>
 
 				{/* Right Column */}
-				<div
-					className="lg:col-span-5 text-neutral-500 text-sm h-full">
+				<div className="lg:col-span-5 text-neutral-500 text-base h-full">
 					<p>{currentPodcast.contentText}</p>
 				</div>
 			</div>
