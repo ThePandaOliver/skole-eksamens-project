@@ -6,10 +6,19 @@ import React, {
 	useRef,
 	useEffect,
 	useCallback,
+	useMemo,
 	Suspense,
 } from "react";
-import {FaBackward, FaForward, FaPause, FaPlay, FaSpinner} from "react-icons/fa6";
-import {getPodcast} from "@/api";
+import {
+	FaBackward,
+	FaForward,
+	FaPause,
+	FaPlay,
+	FaSpinner,
+	FaBackwardStep,
+	FaForwardStep,
+} from "react-icons/fa6";
+import {getAllPodcast, getPodcast} from "@/api";
 import {cn} from "tailwind-variants";
 import Image from "next/image";
 
@@ -27,11 +36,13 @@ export interface PodcastItem {
 export interface PodcastProps {
 	podcasts: PodcastItem | PodcastItem[];
 	className?: string;
+	initialIndex?: number;
+	onPodcastChange?: (index: number, podcast: PodcastItem) => void;
 }
 
 export interface AsyncPodcastProps {
 	ids?: string | string[];
-	podcasts?: Promise<PodcastItem> | Promise<PodcastItem[]>;
+	podcasts?: Promise<PodcastItem> | Promise<PodcastItem[]> | Promise<PodcastItem | PodcastItem[]>;
 	className?: string;
 }
 
@@ -50,8 +61,21 @@ const BAR_COUNT = 50;
 
 export function Podcast({
 	                        podcasts,
-	                        className
+	                        className,
+	                        initialIndex = 0,
+	                        onPodcastChange,
                         }: PodcastProps) {
+	const podcastList = useMemo(() => {
+		if (!podcasts) return [];
+		return Array.isArray(podcasts) ? podcasts : [podcasts];
+	}, [podcasts]);
+
+	const [currentIndex, setCurrentIndex] = useState(initialIndex);
+	const activeIndex = podcastList.length > 0
+		? Math.min(Math.max(0, currentIndex), podcastList.length - 1)
+		: 0;
+	const currentPodcast = podcastList[activeIndex];
+
 	const audioRef = useRef<HTMLAudioElement | null>(null);
 	const progressBarRef = useRef<HTMLDivElement | null>(null);
 
@@ -62,8 +86,57 @@ export function Podcast({
 	const [duration, setDuration] = useState(0);
 	const [isScrubbing, setIsScrubbing] = useState(false);
 
-	const audioSrc = getPodcastAssetUrl(podcasts.podcast);
-	const thumbnailSrc = getPodcastAssetUrl(podcasts.thumbnail);
+	const isInitialMount = useRef(true);
+	const isPlayingRef = useRef(isPlaying);
+
+	useEffect(() => {
+		isPlayingRef.current = isPlaying;
+	}, [isPlaying]);
+
+	const audioSrc = currentPodcast?.podcast ? getPodcastAssetUrl(currentPodcast.podcast) : "";
+	const thumbnailSrc = currentPodcast?.thumbnail ? getPodcastAssetUrl(currentPodcast.thumbnail) : "";
+
+	// Handle track / episode changes
+	useEffect(() => {
+		if (isInitialMount.current) {
+			isInitialMount.current = false;
+			return;
+		}
+
+		setCurrentTime(0);
+		setDuration(0);
+		setErrorMessage(null);
+
+		if (currentPodcast && onPodcastChange) {
+			onPodcastChange(activeIndex, currentPodcast);
+		}
+
+		const audio = audioRef.current;
+		if (!audio) return;
+
+		audio.currentTime = 0;
+		if (audio.duration && !isNaN(audio.duration) && isFinite(audio.duration)) {
+			setDuration(audio.duration);
+		}
+
+		if (isPlayingRef.current) {
+			setIsLoading(true);
+			const playPromise = audio.play();
+			if (playPromise !== undefined) {
+				playPromise
+					.then(() => {
+						setIsPlaying(true);
+						setIsLoading(false);
+					})
+					.catch((err) => {
+						console.warn("Audio switch playback failed:", err);
+						setIsLoading(false);
+						setIsPlaying(false);
+						setErrorMessage("Kunne ikke afspille lyden. Prøv at klikke igen.");
+					});
+			}
+		}
+	}, [activeIndex, currentPodcast, onPodcastChange]);
 
 	const togglePlay = useCallback(() => {
 		const audio = audioRef.current;
@@ -125,6 +198,18 @@ export function Podcast({
 		}
 	};
 
+	const handlePrevEpisode = () => {
+		if (activeIndex > 0) {
+			setCurrentIndex(activeIndex - 1);
+		}
+	};
+
+	const handleNextEpisode = () => {
+		if (activeIndex < podcastList.length - 1) {
+			setCurrentIndex(activeIndex + 1);
+		}
+	};
+
 	const handleSeekFromClientX = useCallback(
 		(clientX: number) => {
 			const barElement = progressBarRef.current;
@@ -172,8 +257,16 @@ export function Podcast({
 		};
 	}, [isScrubbing, handleSeekFromClientX]);
 
+	if (!currentPodcast) {
+		return null;
+	}
+
 	const currentRatio = duration > 0 ? currentTime / duration : 0;
 	const activeBarCount = Math.floor(currentRatio * BAR_COUNT);
+
+	const hasMultiple = podcastList.length > 1;
+	const isFirst = activeIndex <= 0;
+	const isLast = activeIndex >= podcastList.length - 1;
 
 	return (
 		<article
@@ -221,7 +314,12 @@ export function Podcast({
 						}
 					}}
 					onEnded={() => {
-						setIsPlaying(false);
+						if (activeIndex < podcastList.length - 1) {
+							setCurrentIndex((prev) => prev + 1);
+						} else {
+							setIsPlaying(false);
+							setCurrentTime(0);
+						}
 					}}
 					onError={(e) => {
 						const err = e.currentTarget.error;
@@ -242,7 +340,7 @@ export function Podcast({
 					<div className="relative size-50 shrink-0 bg-neutral-100 overflow-hidden self-center">
 						<Image
 							src={thumbnailSrc}
-							alt={podcasts.headline}
+							alt={currentPodcast.headline}
 							fill
 							className="w-full h-full object-cover block"
 						/>
@@ -253,15 +351,30 @@ export function Podcast({
 						{/* Title and subtitle */}
 						<div className="h-full">
 							<h3 className="font-bold text-xl text-black truncate">
-								{podcasts.headline}
+								{currentPodcast.headline}
 							</h3>
 							<p className="text-base border-gray truncate">
-								{podcasts.subtitle}
+								{currentPodcast.subtitle}
 							</p>
 						</div>
 
 						{/* Controls */}
 						<div className="flex items-center justify-center gap-2.5 relative">
+							{/* Previous Episode */}
+							{
+								hasMultiple && (
+									<button
+										type="button"
+										onClick={handlePrevEpisode}
+										disabled={isFirst}
+										title="Forrige episode"
+										className="p-1 text-black hover:text-category active:scale-95 transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-black"
+									>
+										<FaBackwardStep/>
+									</button>
+								)
+							}
+
 							{/* Rewind 10s */}
 							<button
 								type="button"
@@ -272,14 +385,13 @@ export function Podcast({
 								<FaBackward/>
 							</button>
 
-
 							<button
 								type="button"
 								onClick={togglePlay}
 								className={"w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-gray flex items-center justify-center hover:border-black active:scale-90 transition-all bg-white cursor-pointer shadow-xs"}
 							>
 								{isLoading ? (
-									<FaSpinner/>
+									<FaSpinner className="animate-spin"/>
 								) : isPlaying ? (
 									<FaPause/>
 								) : (
@@ -296,6 +408,21 @@ export function Podcast({
 							>
 								<FaForward/>
 							</button>
+
+							{/* Next Episode */}
+							{
+								hasMultiple && (
+									<button
+										type="button"
+										onClick={handleNextEpisode}
+										disabled={isLast}
+										title="Næste episode"
+										className="p-1 text-black hover:text-category active:scale-95 transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-black"
+									>
+										<FaForwardStep/>
+									</button>
+								)
+							}
 						</div>
 
 						{errorMessage && (
@@ -340,7 +467,7 @@ export function Podcast({
 				{/* Right Column */}
 				<div
 					className="lg:col-span-5 text-neutral-500 text-sm h-full">
-					<p>{podcasts.contentText}</p>
+					<p>{currentPodcast.contentText}</p>
 				</div>
 			</div>
 		</article>
@@ -419,15 +546,23 @@ function AsyncPodcastDataConsumer({className, podcast}: { className?: string, po
 }
 
 export default function AsyncPodcast({ids, className, podcasts}: AsyncPodcastProps) {
-	const podcast = podcasts || ids != undefined ? (
-		Array.isArray(ids) ? Promise.all(ids.map(id => getPodcast(id))) : ids !== undefined ? Promise.all([getPodcast(ids[0])]) : undefined
-	) : undefined;
+	const idsKey = Array.isArray(ids) ? ids.join(",") : ids;
 
-	if (!podcast) return null;
+	const podcastPromise = useMemo(() => {
+		if (podcasts) {
+			return Promise.resolve(podcasts).then((res) => (Array.isArray(res) ? res : [res]));
+		}
+		if (ids !== undefined) {
+			const idList = Array.isArray(ids) ? ids : [ids];
+			return Promise.all(idList.map((id) => getPodcast(id)));
+		}
+		return getAllPodcast();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [idsKey, podcasts]);
 
 	return (
-		<Suspense fallback={<PodcastSkeleton/>}>
-			<AsyncPodcastDataConsumer podcast={podcast} className={className}/>
+		<Suspense fallback={<PodcastSkeleton className={className}/>}>
+			<AsyncPodcastDataConsumer podcast={podcastPromise} className={className}/>
 		</Suspense>
 	);
 }
