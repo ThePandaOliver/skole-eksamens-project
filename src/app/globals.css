@@ -13,7 +13,7 @@
   --color-search-text: #999999;
   --color-menu-bg: #000000;
   --color-menu-text: #ffffff;
-  --color-menu-active: rgba(255, 255, 255, 0.1);
+  --color-menu-active: #5c5c5c;
 
   /* Typography Sizes */
   --font-size-hero: 48px;
@@ -51,7 +51,7 @@
   --color-menu-bg: #000000;
   --color-menu-text: #ffffff;
   --color-menu-hover: rgba(255, 255, 255, 0.1);
-  --color-menu-active: rgba(255, 255, 255, 0.1);
+  --color-menu-active: #5c5c5c;
 
   /* Typography / Font Sizes */
   --text-hero: 48px;
