@@ -9,25 +9,29 @@ import React, {
 	Suspense,
 } from "react";
 import {FaBackward, FaForward, FaPause, FaPlay, FaSpinner} from "react-icons/fa6";
+import {getPodcast} from "@/api";
+import {cn} from "tailwind-variants";
+import Image from "next/image";
 
 export interface PodcastItem {
 	_id?: string;
-	id?: string;
 	headline: string;
-	subtitle?: string;
-	length?: number | string;
+	subtitle: string;
+	length: number;
 	podcast: string;
 	thumbnail: string;
-	releaseDate?: string;
-	contentText?: string;
+	releaseDate: string;
+	contentText: string;
 }
 
 export interface PodcastProps {
 	podcast: PodcastItem;
+	className?: string;
 }
 
 export interface AsyncPodcastProps {
-	apiUrl?: string;
+	id: string;
+	className?: string;
 }
 
 export function getPodcastAssetUrl(fileName: string): string {
@@ -38,13 +42,14 @@ function formatTime(totalSeconds: number): string {
 	if (isNaN(totalSeconds) || totalSeconds < 0) return "00:00";
 	const minutes = Math.floor(totalSeconds / 60);
 	const seconds = Math.floor(totalSeconds % 60);
-	return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}` ;
+	return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 }
 
 const BAR_COUNT = 50;
 
 export function Podcast({
 	                        podcast,
+	                        className
                         }: PodcastProps) {
 	const audioRef = useRef<HTMLAudioElement | null>(null);
 	const progressBarRef = useRef<HTMLDivElement | null>(null);
@@ -85,9 +90,7 @@ export function Podcast({
 						console.warn("Audio play rejected:", err);
 						setIsLoading(false);
 						setIsPlaying(false);
-						if (err.name !== "AbortError") {
-							setErrorMessage("Kunne ikke afspille lyden. Prøv at klikke igen.");
-						}
+						setErrorMessage("Kunne ikke afspille lyden. Prøv at klikke igen.");
 					});
 			}
 		} else {
@@ -123,16 +126,16 @@ export function Podcast({
 
 	const handleSeekFromClientX = useCallback(
 		(clientX: number) => {
-			const barElem = progressBarRef.current;
-			if (!barElem) return;
+			const barElement = progressBarRef.current;
+			if (!barElement) return;
 
-			const rect = barElem.getBoundingClientRect();
+			const rect = barElement.getBoundingClientRect();
 			const clickX = clientX - rect.left;
 			const ratio = Math.max(0, Math.min(1, clickX / rect.width));
 			const newTime = ratio * duration;
 
 			setCurrentTime(newTime);
-			if (audioRef.current && !isNaN(newTime) && isFinite(newTime)) {
+			if (audioRef.current) {
 				try {
 					audioRef.current.currentTime = newTime;
 				} catch (err) {
@@ -169,12 +172,16 @@ export function Podcast({
 	}, [isScrubbing, handleSeekFromClientX]);
 
 	const currentRatio = duration > 0 ? currentTime / duration : 0;
-	const activeBarCount = Math.round(currentRatio * BAR_COUNT);
+	const activeBarCount = Math.floor(currentRatio * BAR_COUNT);
 
 	return (
 		<article
-			className={`w-full bg-white border border-[#E0E0E0] p-4 md:p-5 select-none`}
+			className={cn(
+				"w-full bg-white border-2 border-gray p-4",
+				className
+			)}
 		>
+			{/* Audio source */}
 			{audioSrc && (
 				<audio
 					ref={audioRef}
@@ -228,66 +235,47 @@ export function Podcast({
 			)}
 
 			<div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-				<div className="lg:col-span-7 flex flex-col sm:flex-row items-stretch gap-4 sm:gap-5">
-					{/* Square Thumbnail */}
-					<div
-						className="w-full sm:w-[135px] h-[135px] flex-shrink-0 bg-neutral-100 overflow-hidden self-center sm:self-start">
-						{thumbnailSrc ? (
-							// eslint-disable-next-line @next/next/no-img-element
-							<img
-								src={thumbnailSrc}
-								alt={podcast.headline || "Podcast cover"}
-								className="w-full h-full object-cover block"
-								onError={(e) => {
-									e.currentTarget.style.display = "none";
-									const fallback = e.currentTarget.nextElementSibling;
-									if (fallback) fallback.classList.remove("hidden");
-								}}
-							/>
-						) : null}
-						<div
-							className={`w-full h-full bg-[#f3f3f3] flex flex-col items-center justify-center text-neutral-400 p-2 text-center ${
-								thumbnailSrc ? "hidden" : "flex"
-							}`}
-						>
-							<svg className="w-8 h-8 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-							     strokeWidth="1.5">
-								<rect x="2" y="2" width="20" height="20" rx="2"/>
-								<path d="M7 17l9.2-9.2M17 17V8M8 8h9"/>
-							</svg>
-							<span className="text-[10px] uppercase font-semibold">Podcast</span>
-						</div>
+				{/* Left Column */}
+				<div className="lg:col-span-7 flex flex-col sm:flex-row items-stretch gap-4">
+					{/* Thumbnail */}
+					<div className="relative size-50 shrink-0 bg-neutral-100 overflow-hidden self-center">
+						<Image
+							src={thumbnailSrc}
+							alt={podcast.headline}
+							fill
+							className="w-full h-full object-cover block"
+						/>
 					</div>
 
-					<div className="flex-1 flex flex-col justify-between min-w-0">
-						<div className="pt-0.5">
-							<h3 className="font-bold text-[17px] sm:text-menu text-black leading-snug truncate">
+					{/* Center Column */}
+					<div className="flex-1 flex flex-col min-w-0">
+						{/* Title and subtitle */}
+						<div className="h-full">
+							<h3 className="font-bold text-xl text-black truncate">
 								{podcast.headline}
 							</h3>
-							<p className="text-[13px] text-[#999999] leading-snug mt-0.5 truncate">
+							<p className="text-base border-gray truncate">
 								{podcast.subtitle}
 							</p>
 						</div>
 
-						<div className="flex items-center justify-center gap-2.5 my-2 relative">
+						{/* Controls */}
+						<div className="flex items-center justify-center gap-2.5 relative">
 							{/* Rewind 10s */}
 							<button
 								type="button"
 								onClick={handleRewind}
-								aria-label="Skip backward 10 seconds"
 								title="Spol 10 sekunder tilbage"
 								className="p-1 text-black hover:text-category active:scale-95 transition-all cursor-pointer"
 							>
 								<FaBackward/>
 							</button>
 
+
 							<button
 								type="button"
 								onClick={togglePlay}
-								aria-label={isPlaying ? "Pause podcast" : "Play podcast"}
-								className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-[#757575] flex items-center justify-center hover:border-black active:scale-90 transition-all bg-white cursor-pointer shadow-xs ${
-									isLoading ? "ring-2 ring-category animate-pulse" : ""
-								}`}
+								className={"w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-gray flex items-center justify-center hover:border-black active:scale-90 transition-all bg-white cursor-pointer shadow-xs"}
 							>
 								{isLoading ? (
 									<FaSpinner/>
@@ -302,7 +290,6 @@ export function Podcast({
 							<button
 								type="button"
 								onClick={handleForward}
-								aria-label="Skip forward 10 seconds"
 								title="Spol 10 sekunder frem"
 								className="p-1 text-black hover:text-category active:scale-95 transition-all cursor-pointer"
 							>
@@ -311,27 +298,23 @@ export function Podcast({
 						</div>
 
 						{errorMessage && (
-							<p className="text-[11px] text-red-600 text-center -mt-1 mb-1 font-medium">
+							<p className="text-[11px] text-red-600 text-center font-medium">
 								{errorMessage}
 							</p>
 						)}
 
+						{/* Timeline */}
 						<div className="w-full pb-0.5">
 							<div
-								className="flex justify-between items-center text-[12px] font-semibold text-black mb-1 select-none">
+								className="flex justify-between items-center text-sm font-semibold text-black mb-1 select-none">
 								<span>{formatTime(currentTime)}</span>
 								<span>{formatTime(duration)}</span>
 							</div>
 
 							<div
 								ref={progressBarRef}
-								role="slider"
-								aria-label="Audio timeline scrubber"
-								aria-valuemin={0}
-								aria-valuemax={Math.round(duration)}
-								aria-valuenow={Math.round(currentTime)}
 								onMouseDown={handleMouseDown}
-								className="relative flex items-end justify-between h-5 cursor-pointer group py-1"
+								className="relative flex items-end justify-between h-5 cursor-pointer group py-1 select-none"
 							>
 								{Array.from({length: BAR_COUNT}).map((_, i) => {
 									const isPlayed = i < activeBarCount;
@@ -340,14 +323,11 @@ export function Podcast({
 									return (
 										<div
 											key={i}
-											style={{
-												height: isCurrent ? "18px" : "14px",
-											}}
-											className={`w-[2.2px] transition-colors rounded-[0.5px] ${
-												isPlayed || isCurrent
-													? "bg-[#e89700]"
-													: "bg-[#999999] group-hover:bg-[#808080]"
-											}`}
+											className={cn(
+												"w-1 transition-all",
+												isPlayed || isCurrent ? "bg-category" : "bg-gray group-hover:bg-neutral-500",
+												isCurrent ? "h-5" : "h-4"
+											)}
 										/>
 									);
 								})}
@@ -356,9 +336,10 @@ export function Podcast({
 					</div>
 				</div>
 
+				{/* Right Column */}
 				<div
-					className="lg:col-span-5 text-[#6e6e6e] text-[13.5px] sm:text-[14px] leading-relaxed font-normal select-text">
-					<p className="line-clamp-6">{podcast.contentText}</p>
+					className="lg:col-span-5 text-neutral-500 text-sm h-full">
+					<p>{podcast.contentText}</p>
 				</div>
 			</div>
 		</article>
@@ -368,24 +349,31 @@ export function Podcast({
 export function PodcastSkeleton({className = ""}: { className?: string }) {
 	return (
 		<div
-			aria-label="Loading podcast..."
-			className={`w-full bg-white border border-[#E0E0E0] p-4 md:p-5 select-none animate-pulse ${className}`}
+			className={cn(
+				"w-full bg-white border-2 border-gray p-4 select-none animate-pulse",
+				className
+			)}
 		>
 			<div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-				{/* Left Column Skeleton */}
-				<div className="lg:col-span-7 flex flex-col sm:flex-row items-stretch gap-4 sm:gap-5">
-					<div className="w-full sm:w-[135px] h-[135px] bg-neutral-200 flex-shrink-0"/>
+				{/* Left Column */}
+				<div className="lg:col-span-7 flex flex-col sm:flex-row items-stretch gap-4">
+					{/* Thumbnail */}
+					<div className="size-50 shrink-0 bg-neutral-200"/>
 
-					<div className="flex-1 flex flex-col justify-between min-w-0">
-						<div>
+					{/* Center Column */}
+					<div className="flex-1 flex flex-col min-w-0">
+						{/* Title and subtitle */}
+						<div className="h-full">
 							<div className="h-5 bg-neutral-200 rounded w-3/4 mb-2"/>
 							<div className="h-3.5 bg-neutral-100 rounded w-1/2"/>
 						</div>
 
 						<div className="flex items-center justify-center gap-3 my-2">
+							<div className="w-4 h-4 bg-neutral-100 rounded"/>
 							<div className="w-4 h-4 bg-neutral-200 rounded"/>
 							<div className="w-8 h-8 rounded-full bg-neutral-200"/>
 							<div className="w-4 h-4 bg-neutral-200 rounded"/>
+							<div className="w-4 h-4 bg-neutral-100 rounded"/>
 						</div>
 
 						<div className="w-full">
@@ -397,8 +385,7 @@ export function PodcastSkeleton({className = ""}: { className?: string }) {
 								{Array.from({length: BAR_COUNT}).map((_, i) => (
 									<div
 										key={i}
-										style={{height: "14px"}}
-										className="w-[2.2px] bg-neutral-200 rounded-[0.5px]"
+										className={"w-1 bg-neutral-200 h-4"}
 									/>
 								))}
 							</div>
@@ -406,8 +393,8 @@ export function PodcastSkeleton({className = ""}: { className?: string }) {
 					</div>
 				</div>
 
-				{/* Right Column Skeleton */}
-				<div className="lg:col-span-5 space-y-2">
+				{/* Right Column */}
+				<div className="lg:col-span-5 space-y-2 h-full">
 					<div className="h-3.5 bg-neutral-200 rounded w-full"/>
 					<div className="h-3.5 bg-neutral-200 rounded w-11/12"/>
 					<div className="h-3.5 bg-neutral-200 rounded w-4/5"/>
@@ -419,45 +406,23 @@ export function PodcastSkeleton({className = ""}: { className?: string }) {
 	);
 }
 
-const promiseCache = new Map<string, Promise<PodcastItem>>();
-
-export function getPodcastPromise(url: string): Promise<PodcastItem> {
-	if (!promiseCache.has(url)) {
-		const p = fetch(url, {cache: "no-store"})
-			.then(async (res) => {
-				if (!res.ok) {
-					throw new Error(`Failed to load podcast data (${res.status}): ${res.statusText}`);
-				}
-				return await res.json();
-			}).catch((err) => {
-				throw err;
-			});
-		promiseCache.set(url, p);
-	}
-	return promiseCache.get(url)!;
-}
-
-function AsyncPodcastDataConsumer({
-	                                  apiUrl = "http://localhost:3001/podcast/682242eae96e5317c911c72c",
-                                  }: { apiUrl?: string; }) {
-	const promise = getPodcastPromise(apiUrl);
-	const data = use(promise);
+function AsyncPodcastDataConsumer({className, podcast}: { className?: string, podcast: Promise<PodcastItem> }) {
+	const data = use(podcast);
 
 	return (
 		<Podcast
 			podcast={data}
+			className={className}
 		/>
 	);
 }
 
-export default function AsyncPodcast({
-	                                     apiUrl = "http://localhost:3001/podcast/682242eae96e5317c911c72c"
-                                     }: AsyncPodcastProps) {
+export default function AsyncPodcast({id, className}: AsyncPodcastProps) {
+	const podcast = getPodcast(id);
+
 	return (
 		<Suspense fallback={<PodcastSkeleton/>}>
-			<AsyncPodcastDataConsumer
-				apiUrl={apiUrl}
-			/>
+			<AsyncPodcastDataConsumer podcast={podcast} className={className}/>
 		</Suspense>
 	);
 }

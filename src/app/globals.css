@@ -1,19 +1,18 @@
 @import "tailwindcss";
 
-/* ==========================================================================
-   CSS Variables & Design Tokens (Vejledende Designmanual)
-   ========================================================================== */
 :root {
   /* Colors */
   --background: #ffffff;
   --foreground: #000000;
-  --color-primary: #000000;
-  --color-category: #e89700;
-  --color-timestamp: #999999;
-  --color-search-text: #999999;
-  --color-menu-bg: #000000;
-  --color-menu-text: #ffffff;
-  --color-menu-active: #5c5c5c;
+  --primary: #000000;
+  --category: #e89700;
+  --gray: #999999;
+  --timestamp: #999999;
+  --search-text: #999999;
+  --menu-bg: #000000;
+  --menu-text: #ffffff;
+  --menu-hover: rgba(255, 255, 255, 0.1);
+  --menu-active: #5c5c5c;
 
   /* Typography Sizes */
   --font-size-hero: 48px;
@@ -34,9 +33,6 @@
   --search-height: 30px;
 }
 
-/* ==========================================================================
-   Tailwind CSS v4 Theme Configuration
-   ========================================================================== */
 @theme {
   /* Font Family */
   --font-quicksand: var(--font-quicksand), 'Quicksand', sans-serif;
@@ -44,22 +40,23 @@
   /* Theme Colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-primary: #000000;
-  --color-category: #e89700;
-  --color-timestamp: #999999;
-  --color-search-text: #999999;
-  --color-menu-bg: #000000;
-  --color-menu-text: #ffffff;
-  --color-menu-hover: rgba(255, 255, 255, 0.1);
-  --color-menu-active: #5c5c5c;
+  --color-primary: var(--primary);
+  --color-category: var(--category);
+  --color-gray: var(--gray);
+  --color-timestamp: var(--timestamp);
+  --color-search-text: var(--search-text);
+  --color-menu-bg: var(--menu-bg);
+  --color-menu-text: var(--menu-text);
+  --color-menu-hover: var(--menu-hover);
+  --color-menu-active: var(--menu-active);
 
   /* Typography / Font Sizes */
-  --text-hero: 48px;
-  --text-news: 32px;
-  --text-intro: 24px;
-  --text-area: 22px;
-  --text-menu: 18px;
-  --text-menu-lg: 24px;
+  --text-hero: var(--font-size-hero);
+  --text-news: var(--font-size-news);
+  --text-intro: var(--font-size-intro);
+  --text-area: var(--font-size-area);
+  --text-menu: var(--font-size-menu-min);
+  --text-menu-lg: var(--font-size-menu-max);
 
   /* Breakpoints */
   --breakpoint-tablet: 768px;
@@ -81,18 +78,12 @@
   --max-width-container: 1000px;
 }
 
-/* ==========================================================================
-   Base Styles
-   ========================================================================== */
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-quicksand), Arial, Helvetica, sans-serif;
 }
 
-/* ==========================================================================
-   Layout Helpers
-   ========================================================================== */
 .parent-container {
   width: 100%;
   max-width: var(--container-max-width);
