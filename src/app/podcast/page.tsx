@@ -6,7 +6,7 @@ export default async function Page() {
 	const allPodcasts = await getAllPodcast();
 
 	return (
-		<main className={"parent-container space-y-10"}>
+		<main className={"parent-container space-y-10 flex-1"}>
 			<section className={"relative w-full aspect-video"}>
 				<Image src={"http://localhost:3001/assets/images/podcast_1.jpg"} alt={"Podcaster"} fill/>
 				<div className={"absolute bottom-6 right-6 w-100 h-60 bg-category p-4"}>
@@ -21,5 +21,5 @@ export default async function Page() {
 				}
 			</section>
 		</main>
-	)
+	);
 }

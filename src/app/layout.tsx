@@ -1,6 +1,7 @@
 import type {Metadata} from "next";
 import {Quicksand} from "next/font/google";
 import "./globals.css";
+import Footer from "@/component/Footer";
 
 const quicksand = Quicksand({
 	variable: "--font-quicksand",
@@ -20,6 +21,7 @@ export default function RootLayout({children}: LayoutProps<"/">) {
 		>
 			<body className="min-h-full flex flex-col">
 				{children}
+				<Footer />
 			</body>
 		</html>
 	);
