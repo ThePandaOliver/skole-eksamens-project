@@ -25,12 +25,13 @@ export interface PodcastItem {
 }
 
 export interface PodcastProps {
-	podcast: PodcastItem;
+	podcasts: PodcastItem | PodcastItem[];
 	className?: string;
 }
 
 export interface AsyncPodcastProps {
-	id: string;
+	ids?: string | string[];
+	podcasts?: Promise<PodcastItem> | Promise<PodcastItem[]>;
 	className?: string;
 }
 
@@ -48,7 +49,7 @@ function formatTime(totalSeconds: number): string {
 const BAR_COUNT = 50;
 
 export function Podcast({
-	                        podcast,
+	                        podcasts,
 	                        className
                         }: PodcastProps) {
 	const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -61,8 +62,8 @@ export function Podcast({
 	const [duration, setDuration] = useState(0);
 	const [isScrubbing, setIsScrubbing] = useState(false);
 
-	const audioSrc = getPodcastAssetUrl(podcast.podcast);
-	const thumbnailSrc = getPodcastAssetUrl(podcast.thumbnail);
+	const audioSrc = getPodcastAssetUrl(podcasts.podcast);
+	const thumbnailSrc = getPodcastAssetUrl(podcasts.thumbnail);
 
 	const togglePlay = useCallback(() => {
 		const audio = audioRef.current;
@@ -241,7 +242,7 @@ export function Podcast({
 					<div className="relative size-50 shrink-0 bg-neutral-100 overflow-hidden self-center">
 						<Image
 							src={thumbnailSrc}
-							alt={podcast.headline}
+							alt={podcasts.headline}
 							fill
 							className="w-full h-full object-cover block"
 						/>
@@ -252,10 +253,10 @@ export function Podcast({
 						{/* Title and subtitle */}
 						<div className="h-full">
 							<h3 className="font-bold text-xl text-black truncate">
-								{podcast.headline}
+								{podcasts.headline}
 							</h3>
 							<p className="text-base border-gray truncate">
-								{podcast.subtitle}
+								{podcasts.subtitle}
 							</p>
 						</div>
 
@@ -339,14 +340,14 @@ export function Podcast({
 				{/* Right Column */}
 				<div
 					className="lg:col-span-5 text-neutral-500 text-sm h-full">
-					<p>{podcast.contentText}</p>
+					<p>{podcasts.contentText}</p>
 				</div>
 			</div>
 		</article>
 	);
 }
 
-export function PodcastSkeleton({className = ""}: { className?: string }) {
+export function PodcastSkeleton({className}: { className?: string }) {
 	return (
 		<div
 			className={cn(
@@ -406,19 +407,23 @@ export function PodcastSkeleton({className = ""}: { className?: string }) {
 	);
 }
 
-function AsyncPodcastDataConsumer({className, podcast}: { className?: string, podcast: Promise<PodcastItem> }) {
+function AsyncPodcastDataConsumer({className, podcast}: { className?: string, podcast: Promise<PodcastItem[]> }) {
 	const data = use(podcast);
 
 	return (
 		<Podcast
-			podcast={data}
+			podcasts={data}
 			className={className}
 		/>
 	);
 }
 
-export default function AsyncPodcast({id, className}: AsyncPodcastProps) {
-	const podcast = getPodcast(id);
+export default function AsyncPodcast({ids, className, podcasts}: AsyncPodcastProps) {
+	const podcast = podcasts || ids != undefined ? (
+		Array.isArray(ids) ? Promise.all(ids.map(id => getPodcast(id))) : ids !== undefined ? Promise.all([getPodcast(ids[0])]) : undefined
+	) : undefined;
+
+	if (!podcast) return null;
 
 	return (
 		<Suspense fallback={<PodcastSkeleton/>}>
