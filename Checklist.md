@@ -19,6 +19,7 @@
 - [ ] Søg function i header
 - [ ] Quiz (Lav prioritet)
 
+
 | Dag     | Mål                                                | Kommentar |
 |---------|----------------------------------------------------|-----------|
 | Mandag  | Setup projekt og backend, Setup tailwind variabler |           |

@@ -1,7 +1,7 @@
 import type {Metadata} from "next";
 import {Quicksand} from "next/font/google";
 import "./globals.css";
-import Navigation from "@/components/Navigation";
+import NavigationHeader from "@/components/NavigationHeader";
 
 const quicksand = Quicksand({
 	variable: "--font-quicksand",
@@ -20,9 +20,7 @@ export default function RootLayout({children}: LayoutProps<"/">) {
 			className={`${quicksand.variable} h-full antialiased`}
 		>
 			<body className="min-h-full flex flex-col">
-				<header>
-					<Navigation/>
-				</header>
+				<NavigationHeader/>
 				{children}
 			</body>
 		</html>
