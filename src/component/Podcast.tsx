@@ -300,7 +300,10 @@ export function Podcast({
 
 			<div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
 				{/* Left Column */}
-				<div className="lg:col-span-7 flex flex-col sm:flex-row items-stretch gap-4">
+				<div className={cn(
+					"col-span-7 flex flex-col sm:flex-row items-stretch gap-4",
+					(!showContentText || !podcast.contentText) && "col-span-full"
+				)}>
 					{/* Thumbnail */}
 					<div className="relative size-50 shrink-0 bg-neutral-100 overflow-hidden self-center">
 						{thumbnailSrc ? (
@@ -311,7 +314,8 @@ export function Podcast({
 								className="w-full h-full object-cover block"
 							/>
 						) : (
-							<div className="w-full h-full flex items-center justify-center text-neutral-400 font-bold text-xs uppercase p-2 text-center bg-neutral-100">
+							<div
+								className="w-full h-full flex items-center justify-center text-neutral-400 font-bold text-xs uppercase p-2 text-center bg-neutral-100">
 								Intet billede
 							</div>
 						)}
@@ -406,9 +410,9 @@ export function Podcast({
 				</div>
 
 				{/* Right Column */}
-				{showContentText && (
+				{showContentText && podcast.contentText && (
 					<div className="lg:col-span-5 text-neutral-500 text-base h-full">
-						<p>{podcast.contentText || podcast.info || ""}</p>
+						<p>{podcast.contentText || ""}</p>
 					</div>
 				)}
 			</div>
@@ -416,7 +420,10 @@ export function Podcast({
 	);
 }
 
-export function PodcastSkeleton({className, showContentText = true}: { className?: string, showContentText?: boolean }) {
+export function PodcastSkeleton({className, showContentText = true}: {
+	className?: string,
+	showContentText?: boolean
+}) {
 	return (
 		<div
 			className={cn(
@@ -478,7 +485,11 @@ export function PodcastSkeleton({className, showContentText = true}: { className
 	);
 }
 
-function AsyncPodcastDataConsumer({className, podcast, showContentText}: { className?: string, podcast: Promise<PodcastItem>, showContentText?: boolean }) {
+function AsyncPodcastDataConsumer({className, podcast, showContentText}: {
+	className?: string,
+	podcast: Promise<PodcastItem>,
+	showContentText?: boolean
+}) {
 	const data = use(podcast);
 
 	return (
@@ -492,7 +503,7 @@ function AsyncPodcastDataConsumer({className, podcast, showContentText}: { class
 
 export default function AsyncPodcast({id, className, podcast, showContentText}: AsyncPodcastProps) {
 	if (!id || !podcast) return null;
-	const podcastPromise = podcast || getPodcast(id)
+	const podcastPromise = podcast || getPodcast(id);
 
 	return (
 		<Suspense fallback={<PodcastSkeleton className={className} showContentText={showContentText}/>}>

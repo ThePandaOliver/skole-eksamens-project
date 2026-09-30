@@ -102,6 +102,11 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab}: Podc
 			return;
 		}
 
+		if (!createThumbnailFile) {
+			setCreateFormError("Vælg venligst et thumbnail.");
+			return;
+		}
+
 		try {
 			setIsSubmittingCreate(true);
 			const formData = new FormData();
@@ -110,9 +115,7 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab}: Podc
 			formData.append("length", lengthNum.toString());
 			formData.append("releaseDate", createReleaseDate);
 			formData.append("podcast", createAudioFile);
-			if (createThumbnailFile) {
-				formData.append("thumbnail", createThumbnailFile);
-			}
+			formData.append("thumbnail", createThumbnailFile);
 
 			const res = await addPodcast(formData);
 			setSuccessMessage(res.message || `Podcast "${createHeadline}" blev oprettet!`);
@@ -146,7 +149,7 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab}: Podc
 					{/* Headline */}
 					<div className="md:col-span-2">
 						<label className="block text-sm font-bold text-black uppercase mb-1.5">
-							Overskrift / Titel <span className="text-category">*</span>
+							Titel <span className="text-category">*</span>
 						</label>
 						<input
 							type="text"
@@ -158,10 +161,10 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab}: Podc
 						/>
 					</div>
 
-					{/* Description / Info */}
+					{/* Info */}
 					<div className="md:col-span-2">
 						<label className="block text-sm font-bold text-black uppercase mb-1.5">
-							Beskrivelse / Opsummering <span className="text-category">*</span>
+							Beskrivelse <span className="text-category">*</span>
 						</label>
 						<textarea
 							rows={4}
@@ -226,7 +229,7 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab}: Podc
 								</span>
 							</label>
 
-							{/* Audio Preview if selected */}
+							{/* Audio Preview */}
 							{createAudioFile && (
 								<div className="mt-3 pt-3 border-t border-gray/40 space-y-2">
 									<audio
@@ -249,7 +252,7 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab}: Podc
 					{/* Thumbnail File Input */}
 					<div>
 						<label className="block text-sm font-bold text-black uppercase mb-1.5">
-							Coverbillede / Thumbnail (Valgfri)
+							Coverbillede / Thumbnail <span className="text-category">*</span>
 						</label>
 						<div
 							className="border-2 border-dashed border-gray p-4 bg-neutral-50 text-center hover:border-black transition-colors">
@@ -295,7 +298,7 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab}: Podc
 					<button
 						type="submit"
 						disabled={isSubmittingCreate || isCalculatingAudio}
-						className="bg-category text-white font-bold px-8 py-3 uppercase tracking-wider text-sm hover:opacity-90 active:scale-95 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+						className="bg-category text-white font-bold px-8 py-3 uppercase text-sm hover:opacity-90 active:scale-95 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
 					>
 						{isSubmittingCreate ? (
 							<>
@@ -319,17 +322,9 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab}: Podc
 						type="button"
 						onClick={resetCreateForm}
 						disabled={isSubmittingCreate || isCalculatingAudio}
-						className="border-2 border-black text-black font-bold px-6 py-3 uppercase tracking-wider text-sm hover:bg-black hover:text-white transition-colors cursor-pointer disabled:opacity-50"
+						className="border-2 border-black text-black font-bold px-6 py-3 uppercase text-sm hover:bg-black hover:text-white transition-colors cursor-pointer disabled:opacity-50"
 					>
 						Ryd felter
-					</button>
-
-					<button
-						type="button"
-						onClick={() => setActiveTab("list")}
-						className="text-neutral-600 hover:text-black font-semibold text-sm underline ml-auto cursor-pointer"
-					>
-						Tilbage til oversigt
 					</button>
 				</div>
 			</form>
