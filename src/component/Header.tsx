@@ -15,50 +15,22 @@ interface SearchResultItem {
 const SAMPLE_SEARCH_RESULTS: SearchResultItem[] = [
 	{
 		id: "1",
-		headline: "Headline orem ipsum dolor sit amet",
+		headline: "Headline Lorem ipsum dolor sit amet",
 		description:
-			"Phasellus viverra nulla ut metus varius laoreet. hasellus viverra nulla ut metus varius laoreet.hasellus viverra nulla ut metus varius.",
+			"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores beatae cum debitis, dolore dolorum in inventore iusto laudantium qui quia sit voluptates. Accusantium atque corporis cum officia voluptate? Natus.",
 	},
 	{
 		id: "2",
-		headline: "Headline orem ipsum dolor sit amet",
+		headline: "Headline Lorem ipsum dolor sit amet",
 		description:
-			"Phasellus viverra nulla ut metus varius laoreet. hasellus viverra nulla ut metus varius laoreet.hasellus viverra nulla ut metus varius.",
+			"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores beatae cum debitis, dolore dolorum in inventore iusto laudantium qui quia sit voluptates. Accusantium atque corporis cum officia voluptate? Natus.",
 	},
 	{
 		id: "3",
-		headline: "Headline orem ipsum dolor sit amet",
+		headline: "Headline Lorem ipsum dolor sit amet",
 		description:
-			"Phasellus viverra nulla ut metus varius laoreet. hasellus viverra nulla ut metus varius laoreet.hasellus viverra nulla ut metus varius.",
-	},
-	{
-		id: "4",
-		headline: "Nyheder fra ind- og udland",
-		description:
-			"Få et overblik over dagens vigtigste historier og begivenheder.",
-		href: "/nyheder",
-	},
-	{
-		id: "5",
-		headline: "Sport: Dagens resultater og analyser",
-		description:
-			"De seneste sportsnyheder, højdepunkter og stillinger fra turneringen.",
-		href: "/sport",
-	},
-	{
-		id: "6",
-		headline: "Vejret: Udsigten for hele ugen",
-		description:
-			"Se hvordan vejret udvikler sig i de kommende dage.",
-		href: "/vejret",
-	},
-	{
-		id: "7",
-		headline: "Podcast: Lyt til de nyeste episoder",
-		description:
-			"Dyk ned i vores podcasts med spændende gæster og emner.",
-		href: "/podcast",
-	},
+			"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores beatae cum debitis, dolore dolorum in inventore iusto laudantium qui quia sit voluptates. Accusantium atque corporis cum officia voluptate? Natus.",
+	}
 ];
 
 export default function Header() {

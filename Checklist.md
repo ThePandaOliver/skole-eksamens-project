@@ -2,7 +2,7 @@
 
 - [X] Podcast Side og Komponent
     - Komponent, skal vise en timeline
-- [ ] Podcast Admin
+- [X] Podcast Admin
     - Tilføje nye podcasts
     - Redigere eksisterende podcasts
     - Slette podcasts
@@ -10,7 +10,7 @@
 - [ ] Landingpage
 - [ ] Artikel side
 - [ ] Vejr
-- [ ] Layout (Header og Footer)
+- [X] Layout (Header og Footer)
 
 ### Vis der er tid
 

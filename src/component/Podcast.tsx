@@ -25,25 +25,26 @@ import Image from "next/image";
 export interface PodcastItem {
 	_id?: string;
 	headline: string;
-	subtitle: string;
+	subtitle?: string;
+	info?: string;
 	length: number;
 	podcast: string;
-	thumbnail: string;
+	thumbnail?: string;
 	releaseDate: string;
-	contentText: string;
+	contentText?: string;
 }
 
 export interface PodcastProps {
-	podcasts: PodcastItem | PodcastItem[];
+	podcast: PodcastItem;
 	className?: string;
-	initialIndex?: number;
-	onPodcastChange?: (index: number, podcast: PodcastItem) => void;
+	showContentText?: boolean;
 }
 
 export interface AsyncPodcastProps {
-	ids?: string | string[];
-	podcasts?: Promise<PodcastItem> | Promise<PodcastItem[]> | Promise<PodcastItem | PodcastItem[]>;
+	id?: string;
+	podcast?: Promise<PodcastItem>;
 	className?: string;
+	showContentText?: boolean;
 }
 
 export function getPodcastAssetUrl(fileName: string): string {
@@ -60,22 +61,10 @@ function formatTime(totalSeconds: number): string {
 const BAR_COUNT = 50;
 
 export function Podcast({
-	                        podcasts,
+	                        podcast,
 	                        className,
-	                        initialIndex = 0,
-	                        onPodcastChange,
+	                        showContentText = true
                         }: PodcastProps) {
-	const podcastList = useMemo(() => {
-		if (!podcasts) return [];
-		return Array.isArray(podcasts) ? podcasts : [podcasts];
-	}, [podcasts]);
-
-	const [currentIndex, setCurrentIndex] = useState(initialIndex);
-	const activeIndex = podcastList.length > 0
-		? Math.min(Math.max(0, currentIndex), podcastList.length - 1)
-		: 0;
-	const currentPodcast = podcastList[activeIndex];
-
 	const audioRef = useRef<HTMLAudioElement | null>(null);
 	const progressBarRef = useRef<HTMLDivElement | null>(null);
 
@@ -93,10 +82,10 @@ export function Podcast({
 		isPlayingRef.current = isPlaying;
 	}, [isPlaying]);
 
-	const audioSrc = currentPodcast?.podcast ? getPodcastAssetUrl(currentPodcast.podcast) : "";
-	const thumbnailSrc = currentPodcast?.thumbnail ? getPodcastAssetUrl(currentPodcast.thumbnail) : "";
+	const audioSrc = podcast?.podcast ? getPodcastAssetUrl(podcast.podcast) : "";
+	const thumbnailSrc = podcast?.thumbnail ? getPodcastAssetUrl(podcast.thumbnail) : "";
 
-	// Handle track / episode changes
+	// Handle track
 	useEffect(() => {
 		if (isInitialMount.current) {
 			isInitialMount.current = false;
@@ -106,10 +95,6 @@ export function Podcast({
 		setCurrentTime(0);
 		setDuration(0);
 		setErrorMessage(null);
-
-		if (currentPodcast && onPodcastChange) {
-			onPodcastChange(activeIndex, currentPodcast);
-		}
 
 		const audio = audioRef.current;
 		if (!audio) return;
@@ -132,11 +117,11 @@ export function Podcast({
 						console.warn("Audio switch playback failed:", err);
 						setIsLoading(false);
 						setIsPlaying(false);
-						setErrorMessage("Kunne ikke afspille lyden. Prøv at klikke igen.");
+						setErrorMessage("Kunne ikke afspille podcast.");
 					});
 			}
 		}
-	}, [activeIndex, currentPodcast, onPodcastChange]);
+	}, [podcast]);
 
 	const togglePlay = useCallback(() => {
 		const audio = audioRef.current;
@@ -164,7 +149,7 @@ export function Podcast({
 						console.warn("Audio play rejected:", err);
 						setIsLoading(false);
 						setIsPlaying(false);
-						setErrorMessage("Kunne ikke afspille lyden. Prøv at klikke igen.");
+						setErrorMessage("Kunne ikke afspille podcast.");
 					});
 			}
 		} else {
@@ -173,7 +158,7 @@ export function Podcast({
 		}
 	}, []);
 
-	const handleRewind = () => {
+	function handleRewind() {
 		const audio = audioRef.current;
 		if (audio) {
 			const targetTime = Math.max(0, audio.currentTime - 10);
@@ -182,9 +167,9 @@ export function Podcast({
 		} else {
 			setCurrentTime((prev) => Math.max(0, prev - 10));
 		}
-	};
+	}
 
-	const handleForward = () => {
+	function handleForward() {
 		const audio = audioRef.current;
 		const maxDuration = duration > 0 ? duration : (audio?.duration || 0);
 		if (audio) {
@@ -196,19 +181,7 @@ export function Podcast({
 		} else {
 			setCurrentTime((prev) => (maxDuration > 0 ? Math.min(maxDuration, prev + 10) : prev + 10));
 		}
-	};
-
-	const handlePrevEpisode = () => {
-		if (activeIndex > 0) {
-			setCurrentIndex(activeIndex - 1);
-		}
-	};
-
-	const handleNextEpisode = () => {
-		if (activeIndex < podcastList.length - 1) {
-			setCurrentIndex(activeIndex + 1);
-		}
-	};
+	}
 
 	const handleSeekFromClientX = useCallback(
 		(clientX: number) => {
@@ -232,10 +205,10 @@ export function Podcast({
 		[duration]
 	);
 
-	const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+	function handleMouseDown(event: React.MouseEvent<HTMLDivElement>) {
 		setIsScrubbing(true);
-		handleSeekFromClientX(e.clientX);
-	};
+		handleSeekFromClientX(event.clientX);
+	}
 
 	useEffect(() => {
 		if (!isScrubbing) return;
@@ -257,16 +230,12 @@ export function Podcast({
 		};
 	}, [isScrubbing, handleSeekFromClientX]);
 
-	if (!currentPodcast) {
+	if (!podcast) {
 		return null;
 	}
 
 	const currentRatio = duration > 0 ? currentTime / duration : 0;
 	const activeBarCount = Math.floor(currentRatio * BAR_COUNT);
-
-	const hasMultiple = podcastList.length > 1;
-	const isFirst = activeIndex <= 0;
-	const isLast = activeIndex >= podcastList.length - 1;
 
 	return (
 		<article
@@ -300,29 +269,25 @@ export function Podcast({
 					onCanPlay={() => {
 						setIsLoading(false);
 					}}
-					onLoadedMetadata={(e) => {
-						const dur = e.currentTarget.duration;
+					onLoadedMetadata={(event) => {
+						const dur = event.currentTarget.duration;
 						console.log("Duration:", dur);
 						if (dur && !isNaN(dur) && isFinite(dur)) {
 							setDuration(dur);
 						}
 						setIsLoading(false);
 					}}
-					onTimeUpdate={(e) => {
+					onTimeUpdate={(event) => {
 						if (!isScrubbing) {
-							setCurrentTime(e.currentTarget.currentTime);
+							setCurrentTime(event.currentTarget.currentTime);
 						}
 					}}
 					onEnded={() => {
-						if (activeIndex < podcastList.length - 1) {
-							setCurrentIndex((prev) => prev + 1);
-						} else {
-							setIsPlaying(false);
-							setCurrentTime(0);
-						}
+						setIsPlaying(false);
+						setCurrentTime(0);
 					}}
-					onError={(e) => {
-						const err = e.currentTarget.error;
+					onError={(event) => {
+						const err = event.currentTarget.error;
 						console.error("Audio playback error event:", err);
 						setIsPlaying(false);
 						setIsLoading(false);
@@ -338,12 +303,18 @@ export function Podcast({
 				<div className="lg:col-span-7 flex flex-col sm:flex-row items-stretch gap-4">
 					{/* Thumbnail */}
 					<div className="relative size-50 shrink-0 bg-neutral-100 overflow-hidden self-center">
-						<Image
-							src={thumbnailSrc}
-							alt={currentPodcast.headline}
-							fill
-							className="w-full h-full object-cover block"
-						/>
+						{thumbnailSrc ? (
+							<Image
+								src={thumbnailSrc}
+								alt={podcast.headline}
+								fill
+								className="w-full h-full object-cover block"
+							/>
+						) : (
+							<div className="w-full h-full flex items-center justify-center text-neutral-400 font-bold text-xs uppercase p-2 text-center bg-neutral-100">
+								Intet billede
+							</div>
+						)}
 					</div>
 
 					{/* Center Column */}
@@ -351,30 +322,15 @@ export function Podcast({
 						{/* Title and subtitle */}
 						<div className="h-full">
 							<h3 className="font-bold text-xl text-black truncate">
-								{currentPodcast.headline}
+								{podcast.headline}
 							</h3>
-							<p className="text-base border-gray truncate">
-								{currentPodcast.subtitle}
+							<p className="text-base text-neutral-600 truncate">
+								{podcast.subtitle || podcast.info || ""}
 							</p>
 						</div>
 
 						{/* Controls */}
 						<div className="flex items-center justify-center gap-2.5 relative">
-							{/* Previous Episode */}
-							{
-								hasMultiple && (
-									<button
-										type="button"
-										onClick={handlePrevEpisode}
-										disabled={isFirst}
-										title="Forrige episode"
-										className="p-1 text-black hover:text-category active:scale-95 transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-black"
-									>
-										<FaBackwardStep/>
-									</button>
-								)
-							}
-
 							{/* Rewind 10s */}
 							<button
 								type="button"
@@ -408,21 +364,6 @@ export function Podcast({
 							>
 								<FaForward/>
 							</button>
-
-							{/* Next Episode */}
-							{
-								hasMultiple && (
-									<button
-										type="button"
-										onClick={handleNextEpisode}
-										disabled={isLast}
-										title="Næste episode"
-										className="p-1 text-black hover:text-category active:scale-95 transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-black"
-									>
-										<FaForwardStep/>
-									</button>
-								)
-							}
 						</div>
 
 						{errorMessage && (
@@ -465,15 +406,17 @@ export function Podcast({
 				</div>
 
 				{/* Right Column */}
-				<div className="lg:col-span-5 text-neutral-500 text-base h-full">
-					<p>{currentPodcast.contentText}</p>
-				</div>
+				{showContentText && (
+					<div className="lg:col-span-5 text-neutral-500 text-base h-full">
+						<p>{podcast.contentText || podcast.info || ""}</p>
+					</div>
+				)}
 			</div>
 		</article>
 	);
 }
 
-export function PodcastSkeleton({className}: { className?: string }) {
+export function PodcastSkeleton({className, showContentText = true}: { className?: string, showContentText?: boolean }) {
 	return (
 		<div
 			className={cn(
@@ -521,47 +464,39 @@ export function PodcastSkeleton({className}: { className?: string }) {
 				</div>
 
 				{/* Right Column */}
-				<div className="lg:col-span-5 space-y-2 h-full">
-					<div className="h-3.5 bg-neutral-200 rounded w-full"/>
-					<div className="h-3.5 bg-neutral-200 rounded w-11/12"/>
-					<div className="h-3.5 bg-neutral-200 rounded w-4/5"/>
-					<div className="h-3.5 bg-neutral-100 rounded w-full"/>
-					<div className="h-3.5 bg-neutral-100 rounded w-3/4"/>
-				</div>
+				{showContentText && (
+					<div className="lg:col-span-5 space-y-2 h-full">
+						<div className="h-3.5 bg-neutral-200 rounded w-full"/>
+						<div className="h-3.5 bg-neutral-200 rounded w-11/12"/>
+						<div className="h-3.5 bg-neutral-200 rounded w-4/5"/>
+						<div className="h-3.5 bg-neutral-100 rounded w-full"/>
+						<div className="h-3.5 bg-neutral-100 rounded w-3/4"/>
+					</div>
+				)}
 			</div>
 		</div>
 	);
 }
 
-function AsyncPodcastDataConsumer({className, podcast}: { className?: string, podcast: Promise<PodcastItem[]> }) {
+function AsyncPodcastDataConsumer({className, podcast, showContentText}: { className?: string, podcast: Promise<PodcastItem>, showContentText?: boolean }) {
 	const data = use(podcast);
 
 	return (
 		<Podcast
-			podcasts={data}
+			podcast={data}
 			className={className}
+			showContentText={showContentText}
 		/>
 	);
 }
 
-export default function AsyncPodcast({ids, className, podcasts}: AsyncPodcastProps) {
-	const idsKey = Array.isArray(ids) ? ids.join(",") : ids;
-
-	const podcastPromise = useMemo(() => {
-		if (podcasts) {
-			return Promise.resolve(podcasts).then((res) => (Array.isArray(res) ? res : [res]));
-		}
-		if (ids !== undefined) {
-			const idList = Array.isArray(ids) ? ids : [ids];
-			return Promise.all(idList.map((id) => getPodcast(id)));
-		}
-		return getAllPodcast();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [idsKey, podcasts]);
+export default function AsyncPodcast({id, className, podcast, showContentText}: AsyncPodcastProps) {
+	if (!id || !podcast) return null;
+	const podcastPromise = podcast || getPodcast(id)
 
 	return (
-		<Suspense fallback={<PodcastSkeleton className={className}/>}>
-			<AsyncPodcastDataConsumer podcast={podcastPromise} className={className}/>
+		<Suspense fallback={<PodcastSkeleton className={className} showContentText={showContentText}/>}>
+			<AsyncPodcastDataConsumer podcast={podcastPromise} className={className} showContentText={showContentText}/>
 		</Suspense>
 	);
 }

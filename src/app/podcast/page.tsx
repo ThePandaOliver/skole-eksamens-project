@@ -17,7 +17,7 @@ export default async function Page() {
 			</section>
 			<section className={"space-y-6"}>
 				{
-					allPodcasts.map((podcast) => <Podcast key={podcast._id} podcasts={podcast}/>)
+					allPodcasts.map((podcast) => <Podcast key={podcast._id} podcast={podcast}/>)
 				}
 			</section>
 		</main>
