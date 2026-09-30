@@ -12,7 +12,6 @@ export function getAudioDuration(file: File | Blob): Promise<number> {
 		};
 
 		audio.onloadedmetadata = () => {
-			// Certain browser engines (e.g. Chromium) might report Infinity until seeking
 			if (audio.duration === Infinity) {
 				audio.currentTime = Number.MAX_SAFE_INTEGER;
 				audio.ontimeupdate = () => {
@@ -35,9 +34,6 @@ export function getAudioDuration(file: File | Blob): Promise<number> {
 	});
 }
 
-/**
- * Formats seconds into MM:SS or HH:MM:SS.
- */
 export function formatDurationToTime(totalSeconds: number): string {
 	if (isNaN(totalSeconds) || totalSeconds < 0) return "00:00";
 	const hours = Math.floor(totalSeconds / 3600);
