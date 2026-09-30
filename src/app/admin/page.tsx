@@ -1,6 +1,6 @@
 "use client";
 import {FaCircleCheck, FaCircleExclamation, FaPlus, FaXmark} from "react-icons/fa6";
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {PodcastItem} from "@/component/Podcast";
 import {getAllPodcast} from "@/api";
 import {cn} from "tailwind-variants";
@@ -26,18 +26,23 @@ export default function AdminPage() {
 
 	const [activeTab, setActiveTab] = useState<"list" | "create">("list");
 
+	const refetchPodcasts = async () => {
+		try {
+			setIsLoading(true);
+			setError(null);
+			const data = await getAllPodcast();
+			setPodcasts(Array.isArray(data) ? data : []);
+		} catch (err) {
+			console.error("Failed to load podcasts:", err);
+			setError("Kunne ikke hente podcasts.");
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
 	useEffect(() => {
-		getAllPodcast()
-			.then((data) => {
-				setPodcasts(Array.isArray(data) ? data : []);
-				setIsLoading(false);
-			})
-			.catch((err) => {
-				console.error("Failed to load podcasts:", err);
-				setError("Kunne ikke hente podcasts.");
-				setIsLoading(false);
-			});
+		// eslint-disable-next-line react-hooks/set-state-in-effect
+		refetchPodcasts();
 	}, []);
 
 	return (
@@ -104,11 +109,22 @@ export default function AdminPage() {
 			</section>
 
 			{activeTab === "create" && (
-				<PodcastCreateTab setSuccessMessage={setSuccessMessage} setActiveTab={setActiveTab}/>
+				<PodcastCreateTab
+					setSuccessMessage={setSuccessMessage}
+					setActiveTab={setActiveTab}
+					refetchPodcasts={refetchPodcasts}
+				/>
 			)}
 
 			{activeTab === "list" && (
-				<PodcastListTab isLoading={isLoading} podcasts={podcasts} setActiveTab={setActiveTab} setError={setError} setSuccessMessage={setSuccessMessage}/>
+				<PodcastListTab
+					isLoading={isLoading}
+					podcasts={podcasts}
+					setActiveTab={setActiveTab}
+					setError={setError}
+					setSuccessMessage={setSuccessMessage}
+					refetchPodcasts={refetchPodcasts}
+				/>
 			)}
 		</main>
 	);

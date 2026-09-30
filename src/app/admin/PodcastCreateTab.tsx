@@ -1,5 +1,5 @@
 "use client";
-import {useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import {formatDateForInput} from "@/app/admin/page";
 import {addPodcast} from "@/api";
 import Image from "next/image";
@@ -9,9 +9,10 @@ import {formatDurationToTime, getAudioDuration} from "@/utils/audio";
 interface PodcastCreateTabProps {
 	setSuccessMessage: (message: string | null) => void;
 	setActiveTab: (tab: "list" | "create") => void;
+	refetchPodcasts: () => Promise<void> | void;
 }
 
-export default function PodcastCreateTab({setSuccessMessage, setActiveTab}: PodcastCreateTabProps) {
+export default function PodcastCreateTab({setSuccessMessage, setActiveTab, refetchPodcasts}: PodcastCreateTabProps) {
 	// Create Form State
 	const [createHeadline, setCreateHeadline] = useState("");
 	const [createInfo, setCreateInfo] = useState("");
@@ -121,6 +122,7 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab}: Podc
 			setSuccessMessage(res.message || `Podcast "${createHeadline}" blev oprettet!`);
 			resetCreateForm();
 			setActiveTab("list");
+			await refetchPodcasts();
 		} catch (err: unknown) {
 			console.error("Create podcast failed:", err);
 			const errMsg = err instanceof Error ? err.message : "Der opstod en fejl under upload af podcasten.";

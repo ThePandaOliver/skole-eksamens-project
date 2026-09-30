@@ -1,7 +1,7 @@
 "use client";
 
 import React, {useMemo, useRef, useState} from "react";
-import {getPodcastAssetUrl, Podcast, PodcastItem} from "@/component/Podcast";
+import {getPodcastAssetUrl, Podcast, PodcastItem, PodcastSkeleton} from "@/component/Podcast";
 import {formatDateForInput} from "@/app/admin/page";
 import {deletePodcast, updatePodcast} from "@/api";
 import {
@@ -24,6 +24,7 @@ interface PodcastListTabProps {
 	setSuccessMessage: (message: string | null) => void;
 	setError: (message: string | null) => void;
 	setActiveTab: (tab: "list" | "create") => void;
+	refetchPodcasts?: () => Promise<void> | void;
 }
 
 export default function PodcastListTab({
@@ -31,7 +32,8 @@ export default function PodcastListTab({
 	                                       setSuccessMessage,
 	                                       setError,
 	                                       podcasts,
-	                                       setActiveTab
+	                                       setActiveTab,
+	                                       refetchPodcasts
                                        }: PodcastListTabProps) {
 	const [searchQuery, setSearchQuery] = useState("");
 
@@ -153,6 +155,9 @@ export default function PodcastListTab({
 			const res = await updatePodcast(editingPodcast._id, formData);
 			setSuccessMessage(res.message || `Podcast "${editHeadline}" blev opdateret!`);
 			handleCancelEdit();
+			if (refetchPodcasts) {
+				await refetchPodcasts();
+			}
 		} catch (err: unknown) {
 			console.error("Update podcast failed:", err);
 			const errMsg = err instanceof Error ? err.message : "Der opstod en fejl under opdatering.";
@@ -169,6 +174,9 @@ export default function PodcastListTab({
 			const res = await deletePodcast(podcastToDelete._id);
 			setSuccessMessage(res.message || `Podcast "${podcastToDelete.headline}" blev slettet.`);
 			setPodcastToDelete(null);
+			if (refetchPodcasts) {
+				await refetchPodcasts();
+			}
 		} catch (err: unknown) {
 			console.error("Delete podcast failed:", err);
 			const errMsg = err instanceof Error ? err.message : "Kunne ikke slette podcasten.";
@@ -219,9 +227,26 @@ export default function PodcastListTab({
 
 				{/* Podcasts List */}
 				{isLoading ? (
-					<div className="bg-white border-2 border-gray p-12 text-center space-y-3">
-						<FaSpinner className="animate-spin text-3xl mx-auto text-category"/>
-						<p className="text-neutral-600 font-semibold">Henter podcasts fra serveren...</p>
+					<div className="space-y-4">
+						<article
+							className="bg-white border-2 border-gray flex flex-col md:flex-row gap-5 items-start md:items-center"
+						>
+							<PodcastSkeleton className={"border-none"}/>
+
+							{/* Actions */}
+							<div
+								className="flex flex-row md:flex-col p-4 gap-2 shrink-0 w-full md:w-auto justify-end animate-pulse">
+								<div
+									className="w-full md:w-30 h-10 bg-neutral-200"
+								>
+								</div>
+
+								<div
+									className="w-full md:w-30 h-10 bg-neutral-200"
+								>
+								</div>
+							</div>
+						</article>
 					</div>
 				) : filteredPodcasts.length === 0 ? (
 					<div className="bg-white border-2 border-gray p-12 text-center space-y-4">
@@ -250,7 +275,7 @@ export default function PodcastListTab({
 							return (
 								<article
 									key={podcast._id}
-									className="bg-white border-2 border-gray hover:border-black transition-colors flex flex-col md:flex-row gap-5 items-start md:items-center"
+									className="bg-white border-2 border-gray flex flex-col md:flex-row gap-5 items-start md:items-center"
 								>
 									<Podcast podcast={podcast} className={"border-none"}/>
 
