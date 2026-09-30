@@ -21,6 +21,7 @@ import {
 import {getAllPodcast, getPodcast} from "@/api";
 import {cn} from "tailwind-variants";
 import Image from "next/image";
+import {formatDurationToTime} from "@/utils/audio";
 
 export interface PodcastItem {
 	_id?: string;
@@ -51,13 +52,6 @@ export function getPodcastAssetUrl(fileName: string): string {
 	return `http://localhost:3001/assets/podcast/${fileName}`;
 }
 
-function formatTime(totalSeconds: number): string {
-	if (isNaN(totalSeconds) || totalSeconds < 0) return "00:00";
-	const minutes = Math.floor(totalSeconds / 60);
-	const seconds = Math.floor(totalSeconds % 60);
-	return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-}
-
 const BAR_COUNT = 50;
 
 export function Podcast({
@@ -85,7 +79,6 @@ export function Podcast({
 	const audioSrc = podcast?.podcast ? getPodcastAssetUrl(podcast.podcast) : "";
 	const thumbnailSrc = podcast?.thumbnail ? getPodcastAssetUrl(podcast.thumbnail) : "";
 
-	// Handle track
 	useEffect(() => {
 		if (isInitialMount.current) {
 			isInitialMount.current = false;
@@ -380,8 +373,8 @@ export function Podcast({
 						<div className="w-full pb-0.5">
 							<div
 								className="flex justify-between items-center text-sm font-semibold text-black mb-1 select-none">
-								<span>{formatTime(currentTime)}</span>
-								<span>{formatTime(duration)}</span>
+								<span>{formatDurationToTime(currentTime)}</span>
+								<span>{formatDurationToTime(duration)}</span>
 							</div>
 
 							<div

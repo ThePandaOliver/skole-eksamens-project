@@ -1,7 +1,3 @@
-/**
- * Calculates the duration of an audio file in seconds using the browser's HTML5 Audio API.
- * Uses object URLs and metadata preloading without loading the whole audio buffer into memory.
- */
 export function getAudioDuration(file: File | Blob): Promise<number> {
 	return new Promise((resolve, reject) => {
 		const audio = document.createElement("audio");

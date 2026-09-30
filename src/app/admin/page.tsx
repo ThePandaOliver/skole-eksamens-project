@@ -18,21 +18,6 @@ export function formatDateForInput(dateString?: string): string {
 	}
 }
 
-export function formatDateForDisplay(dateString?: string): string {
-	if (!dateString) return "-";
-	try {
-		const d = new Date(dateString);
-		if (isNaN(d.getTime())) return dateString;
-		return d.toLocaleDateString("da-DK", {
-			day: "numeric",
-			month: "short",
-			year: "numeric",
-		});
-	} catch {
-		return dateString;
-	}
-}
-
 export default function AdminPage() {
 	const [podcasts, setPodcasts] = useState<PodcastItem[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
