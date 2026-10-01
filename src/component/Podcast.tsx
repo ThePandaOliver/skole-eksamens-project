@@ -1,38 +1,11 @@
 "use client";
 
-import React, {
-	use,
-	useState,
-	useRef,
-	useEffect,
-	useCallback,
-	useMemo,
-	Suspense,
-} from "react";
-import {
-	FaBackward,
-	FaForward,
-	FaPause,
-	FaPlay,
-	FaSpinner,
-	FaBackwardStep,
-	FaForwardStep,
-} from "react-icons/fa6";
-import {getAllPodcast, getPodcast} from "@/api";
+import React, {Suspense, use, useCallback, useEffect, useRef, useState,} from "react";
+import {FaBackward, FaForward, FaPause, FaPlay, FaSpinner,} from "react-icons/fa6";
+import {getPodcast, PodcastItem} from "@/api";
 import {cn} from "tailwind-variants";
 import Image from "next/image";
 import {formatDurationToTime} from "@/utils/audio";
-
-export interface PodcastItem {
-	_id?: string;
-	headline: string;
-	subtitle?: string;
-	length: number;
-	podcast: string;
-	thumbnail?: string;
-	releaseDate: string;
-	contentText?: string;
-}
 
 export interface PodcastProps {
 	podcast: PodcastItem;
@@ -321,7 +294,7 @@ export function Podcast({
 								{podcast.headline}
 							</h3>
 							<p className="text-base text-neutral-600 truncate">
-								{podcast.subtitle || podcast.info || ""}
+								{podcast.subtitle || ""}
 							</p>
 						</div>
 

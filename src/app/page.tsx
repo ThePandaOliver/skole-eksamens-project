@@ -1,7 +1,9 @@
-export default function Home() {
-	return (
-		<div>
+export default async function Home() {
 
-		</div>
+
+	return (
+		<main className={"parent-container"}>
+
+		</main>
 	);
 }
