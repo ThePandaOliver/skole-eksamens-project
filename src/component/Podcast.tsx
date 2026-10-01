@@ -2,7 +2,7 @@
 
 import React, {Suspense, use, useCallback, useEffect, useRef, useState,} from "react";
 import {FaBackward, FaForward, FaPause, FaPlay, FaSpinner,} from "react-icons/fa6";
-import {getPodcast, PodcastItem} from "@/api";
+import {getPodcast, getPodcastAssetUrl, type PodcastItem} from "@/api";
 import {cn} from "tailwind-variants";
 import Image from "next/image";
 import {formatDurationToTime} from "@/utils/audio";
@@ -18,10 +18,6 @@ export interface AsyncPodcastProps {
 	podcast?: Promise<PodcastItem>;
 	className?: string;
 	showContentText?: boolean;
-}
-
-export function getPodcastAssetUrl(fileName: string): string {
-	return `http://localhost:3001/assets/podcast/${fileName}`;
 }
 
 const BAR_COUNT = 50;
