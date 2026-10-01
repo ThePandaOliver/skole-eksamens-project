@@ -27,7 +27,6 @@ export interface PodcastItem {
 	_id?: string;
 	headline: string;
 	subtitle?: string;
-	info?: string;
 	length: number;
 	podcast: string;
 	thumbnail?: string;

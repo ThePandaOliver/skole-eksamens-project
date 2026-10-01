@@ -40,7 +40,8 @@ export default function PodcastListTab({
 	// Edit Modal State
 	const [editingPodcast, setEditingPodcast] = useState<PodcastItem | null>(null);
 	const [editHeadline, setEditHeadline] = useState("");
-	const [editInfo, setEditInfo] = useState("");
+	const [editSubtitle, setEditSubtitle] = useState("");
+	const [editContent, setEditContent] = useState<string | null>(null);
 	const [editLength, setEditLength] = useState<string>("");
 	const [editReleaseDate, setEditReleaseDate] = useState<string>("");
 	const [editAudioFile, setEditAudioFile] = useState<File | null>(null);
@@ -92,7 +93,8 @@ export default function PodcastListTab({
 	function handleOpenEdit(podcast: PodcastItem) {
 		setEditingPodcast(podcast);
 		setEditHeadline(podcast.headline || "");
-		setEditInfo(podcast.info || podcast.subtitle || podcast.contentText || "");
+		setEditSubtitle(podcast.subtitle || "");
+		setEditContent(podcast.contentText || "");
 		setEditLength(podcast.length ? podcast.length.toString() : "30");
 		setEditReleaseDate(formatDateForInput(podcast.releaseDate));
 		setEditAudioFile(null);
@@ -120,11 +122,11 @@ export default function PodcastListTab({
 		setEditFormError(null);
 
 		if (!editHeadline.trim()) {
-			setEditFormError("Angiv venligst en overskrift / titel.");
+			setEditFormError("Angiv venligst en titel.");
 			return;
 		}
-		if (!editInfo.trim()) {
-			setEditFormError("Angiv venligst en beskrivelse / info.");
+		if (!editSubtitle.trim()) {
+			setEditFormError("Angiv venligst en undertekst.");
 			return;
 		}
 		const lengthNum = parseInt(editLength, 10);
@@ -141,7 +143,10 @@ export default function PodcastListTab({
 			setIsSubmittingEdit(true);
 			const formData = new FormData();
 			formData.append("headline", editHeadline.trim());
-			formData.append("info", editInfo.trim());
+			formData.append("subtitle", editSubtitle.trim());
+			if (editContent) {
+				formData.append("contentText", editContent.trim());
+			}
 			formData.append("length", lengthNum.toString());
 			formData.append("releaseDate", editReleaseDate);
 
@@ -193,7 +198,7 @@ export default function PodcastListTab({
 		if (query) {
 			list = list.filter((item) => {
 				const headline = (item.headline || "").toLowerCase();
-				const info = (item.info || item.subtitle || item.contentText || "").toLowerCase();
+				const info = (item.subtitle || item.contentText || "").toLowerCase();
 				return headline.includes(query) || info.includes(query);
 			});
 		}
@@ -341,7 +346,21 @@ export default function PodcastListTab({
 								<input
 									type="text"
 									value={editHeadline}
-									onChange={(e) => setEditHeadline(e.target.value)}
+									onChange={(event) => setEditHeadline(event.target.value)}
+									required
+									className="w-full border-2 border-gray focus:border-black p-3 outline-none text-black font-medium transition-colors bg-white"
+								/>
+							</div>
+
+							{/* Subtitle */}
+							<div>
+								<label className="block text-sm font-bold text-black uppercase mb-1">
+									Undertekst <span className="text-category">*</span>
+								</label>
+								<input
+									type="text"
+									value={editSubtitle}
+									onChange={(event) => setEditSubtitle(event.target.value)}
 									required
 									className="w-full border-2 border-gray focus:border-black p-3 outline-none text-black font-medium transition-colors bg-white"
 								/>
@@ -350,12 +369,12 @@ export default function PodcastListTab({
 							{/* Description */}
 							<div>
 								<label className="block text-sm font-bold text-black uppercase mb-1">
-									Beskrivelse <span className="text-category">*</span>
+									Beskrivelse
 								</label>
 								<textarea
 									rows={4}
-									value={editInfo}
-									onChange={(e) => setEditInfo(e.target.value)}
+									value={editContent || ""}
+									onChange={(event) => setEditContent(event.target.value)}
 									required
 									className="w-full border-2 border-gray focus:border-black p-3 outline-none text-black font-medium transition-colors bg-white resize-y"
 								/>
@@ -369,7 +388,7 @@ export default function PodcastListTab({
 								<input
 									type="date"
 									value={editReleaseDate}
-									onChange={(e) => setEditReleaseDate(e.target.value)}
+									onChange={(event) => setEditReleaseDate(event.target.value)}
 									required
 									className="w-full border-2 border-gray focus:border-black p-3 outline-none text-black font-medium transition-colors bg-white"
 								/>

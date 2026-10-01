@@ -15,7 +15,8 @@ interface PodcastCreateTabProps {
 export default function PodcastCreateTab({setSuccessMessage, setActiveTab, refetchPodcasts}: PodcastCreateTabProps) {
 	// Create Form State
 	const [createHeadline, setCreateHeadline] = useState("");
-	const [createInfo, setCreateInfo] = useState("");
+	const [createSubtitle, setCreateSubtitle] = useState("");
+	const [createContent, setCreateContent] = useState<string | null>(null);
 	const [createLength, setCreateLength] = useState<string>("30");
 	const [createReleaseDate, setCreateReleaseDate] = useState<string>(formatDateForInput());
 	const [createAudioFile, setCreateAudioFile] = useState<File | null>(null);
@@ -62,7 +63,8 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab, refet
 
 	function resetCreateForm() {
 		setCreateHeadline("");
-		setCreateInfo("");
+		setCreateSubtitle("");
+		setCreateContent("");
 		setCreateLength("30");
 		setCreateReleaseDate(formatDateForInput());
 		setCreateAudioFile(null);
@@ -82,11 +84,11 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab, refet
 		setCreateFormError(null);
 
 		if (!createHeadline.trim()) {
-			setCreateFormError("Angiv venligst en overskrift / titel.");
+			setCreateFormError("Angiv venligst en titel.");
 			return;
 		}
-		if (!createInfo.trim()) {
-			setCreateFormError("Angiv venligst en beskrivelse / info.");
+		if (!createSubtitle.trim()) {
+			setCreateFormError("Angiv venligst en undertekst.");
 			return;
 		}
 		if (!createAudioFile) {
@@ -112,7 +114,10 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab, refet
 			setIsSubmittingCreate(true);
 			const formData = new FormData();
 			formData.append("headline", createHeadline.trim());
-			formData.append("info", createInfo.trim());
+			formData.append("subtitle", createSubtitle.trim());
+			if (createContent) {
+				formData.append("contentText", createContent.trim());
+			}
 			formData.append("length", lengthNum.toString());
 			formData.append("releaseDate", createReleaseDate);
 			formData.append("podcast", createAudioFile);
@@ -157,23 +162,34 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab, refet
 							type="text"
 							value={createHeadline}
 							onChange={(e) => setCreateHeadline(e.target.value)}
-							placeholder="F.eks. Fremtidens Kunstig Intelligens"
 							required
 							className="w-full border-2 border-gray focus:border-black p-3 outline-none text-black font-medium transition-colors bg-white"
 						/>
 					</div>
 
-					{/* Info */}
+					{/* Subtitle */}
 					<div className="md:col-span-2">
 						<label className="block text-sm font-bold text-black uppercase mb-1.5">
-							Beskrivelse <span className="text-category">*</span>
+							Undertekst <span className="text-category">*</span>
+						</label>
+						<input
+							type="text"
+							value={createSubtitle}
+							onChange={(e) => setCreateSubtitle(e.target.value)}
+							required
+							className="w-full border-2 border-gray focus:border-black p-3 outline-none text-black font-medium transition-colors bg-white"
+						/>
+					</div>
+
+					{/* Description */}
+					<div className="md:col-span-2">
+						<label className="block text-sm font-bold text-black uppercase mb-1.5">
+							Beskrivelse
 						</label>
 						<textarea
 							rows={4}
-							value={createInfo}
-							onChange={(e) => setCreateInfo(e.target.value)}
-							placeholder="Kort beskrivelse af podcastens indhold og emne..."
-							required
+							value={createContent || ""}
+							onChange={(e) => setCreateContent(e.target.value)}
 							className="w-full border-2 border-gray focus:border-black p-3 outline-none text-black font-medium transition-colors bg-white resize-y"
 						/>
 					</div>
@@ -227,7 +243,7 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab, refet
 								<span className="text-xs text-neutral-500">
 									{createAudioFile
 										? `${createAudioFile.name} (${(createAudioFile.size / (1024 * 1024)).toFixed(2)} MB)`
-										: "Tilladte formater: .mp3, .wav, .m4a (maks 50MB)"}
+										: "Tilladte formater: .mp3, .wav, .m4a"}
 								</span>
 							</label>
 
@@ -254,7 +270,7 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab, refet
 					{/* Thumbnail File Input */}
 					<div>
 						<label className="block text-sm font-bold text-black uppercase mb-1.5">
-							Coverbillede / Thumbnail <span className="text-category">*</span>
+							Thumbnail <span className="text-category">*</span>
 						</label>
 						<div
 							className="border-2 border-dashed border-gray p-4 bg-neutral-50 text-center hover:border-black transition-colors">
@@ -321,7 +337,6 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab, refet
 					</button>
 
 					<button
-						type="button"
 						onClick={resetCreateForm}
 						disabled={isSubmittingCreate || isCalculatingAudio}
 						className="border-2 border-black text-black font-bold px-6 py-3 uppercase text-sm hover:bg-black hover:text-white transition-colors cursor-pointer disabled:opacity-50"
