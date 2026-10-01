@@ -76,51 +76,51 @@ export default function Header() {
 		<>
 			{/* Main Header Bar */}
 			<header className="sticky top-0 z-40 w-full bg-menu-bg text-menu-text">
-				<div className="h-menu-h px-4 flex items-center justify-between">
+				<div className="h-14 md:h-menu-h px-3 sm:px-4 flex items-center justify-between">
 					{/* Logo */}
 					<Link
 						href="/"
-						className="text-2xl md:text-3xl px-4 -ml-4 font-bold hover:bg-menu-hover h-full select-none flex items-center"
+						className="text-xl sm:text-2xl md:text-3xl font-bold hover:bg-menu-hover h-full select-none flex items-center px-2 sm:px-4 -ml-2 sm:-ml-4 shrink-0"
 					>
 						...news
 					</Link>
 
 					{/* Navigation Links */}
-					<nav className="hidden md:flex items-center gap-2 lg:gap-4 h-full">
+					<nav className="hidden sm:flex items-center gap-1 sm:gap-2.5 lg:gap-4 h-full">
 						<Link
 							href="/nyheder"
-							className="text-menu text-lg font-semibold hover:bg-menu-hover transition-colors h-full select-none flex items-center px-4"
+							className="text-sm md:text-lg font-semibold hover:bg-menu-hover transition-colors h-full select-none flex items-center px-1.5 sm:px-2.5 md:px-4"
 						>
 							Nyheder
 						</Link>
 						<Link
 							href="/sport"
-							className="text-menu text-lg font-semibold hover:bg-menu-hover transition-colors h-full select-none flex items-center px-4"
+							className="text-sm md:text-lg font-semibold hover:bg-menu-hover transition-colors h-full select-none flex items-center px-1.5 sm:px-2.5 md:px-4"
 						>
 							Sport
 						</Link>
 						<Link
 							href="/vejret"
-							className="text-menu text-lg font-semibold hover:bg-menu-hover transition-colors h-full select-none flex items-center px-4"
+							className="text-sm md:text-lg font-semibold hover:bg-menu-hover transition-colors h-full select-none flex items-center px-1.5 sm:px-2.5 md:px-4"
 						>
 							Vejret
 						</Link>
 						<Link
 							href="/podcast"
-							className="text-menu text-lg font-semibold hover:bg-menu-hover transition-colors h-full select-none flex items-center px-4"
+							className="text-sm md:text-lg font-semibold hover:bg-menu-hover transition-colors h-full select-none flex items-center px-1.5 sm:px-2.5 md:px-4"
 						>
 							Podcast
 						</Link>
 					</nav>
 
 					{/* Right Section */}
-					<div className="flex items-center">
+					<div className="flex items-center shrink-0">
 						{/* Desktop Search Bar */}
 						<div className="hidden lg:flex items-center w-search-w h-search-h bg-white rounded-lg px-2">
 							<input
 								type="text"
 								placeholder="Søg på news"
-								className="w-full text-black placeholder:text-search-text outline-none"
+								className="w-full text-black placeholder:text-search-text outline-none text-sm"
 							/>
 						</div>
 
@@ -128,9 +128,10 @@ export default function Header() {
 						<button
 							type="button"
 							onClick={() => setIsOpen(true)}
-							className="lg:hidden p-2 hover:bg-menu-hover rounded-full transition-colors cursor-pointer"
+							className="lg:hidden p-1.5 sm:p-2 hover:bg-menu-hover rounded-full transition-colors cursor-pointer text-white"
+							aria-label="Åbn menu"
 						>
-							<FaBars className={"text-2xl"}/>
+							<FaBars className="text-xl sm:text-2xl" />
 						</button>
 					</div>
 				</div>
@@ -147,11 +148,12 @@ export default function Header() {
 			>
 				{/* Top bar */}
 				<div className="w-full bg-black text-menu-text shrink-0">
-					<div className="max-w-container mx-auto h-menu-h px-4 flex items-center justify-between">
+					<div className="max-w-container mx-auto h-14 md:h-menu-h px-4 flex items-center justify-between">
 						{/* Logo */}
 						<Link
 							href="/"
-							className="text-2xl md:text-3xl px-4 -ml-4 font-bold hover:bg-menu-hover h-full select-none flex items-center"
+							onClick={() => setIsOpen(false)}
+							className="text-xl sm:text-2xl md:text-3xl px-2 sm:px-4 -ml-2 sm:-ml-4 font-bold hover:bg-menu-hover h-full select-none flex items-center"
 						>
 							...news
 						</Link>
@@ -161,8 +163,9 @@ export default function Header() {
 							type="button"
 							onClick={() => setIsOpen(false)}
 							className="p-2 hover:bg-menu-hover rounded-full transition-colors cursor-pointer"
+							aria-label="Luk menu"
 						>
-							<FaX className={"text-2xl"}/>
+							<FaX className="text-xl sm:text-2xl" />
 						</button>
 					</div>
 				</div>
@@ -180,7 +183,7 @@ export default function Header() {
 								placeholder="Søg på News"
 								className="w-full text-xl text-black placeholder:text-search-text outline-none pr-8"
 							/>
-							<FaMagnifyingGlass className="w-6 h-6 text-neutral-600 shrink-0 absolute right-4 pointer-events-none"/>
+							<FaMagnifyingGlass className="w-6 h-6 text-neutral-600 shrink-0 absolute right-4 pointer-events-none" />
 						</div>
 
 						{/* Navigation Links */}
