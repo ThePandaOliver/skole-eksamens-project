@@ -56,22 +56,16 @@ export async function deletePodcast(
 
 /* Article Types & Functions */
 
-export interface ArticleContentBodyItem {
-	type?: string;
-	text: string;
-	headline?: string;
-}
-
 export interface ArticleParagraphContent {
 	type: "paragraph";
-	text: string;
+	text?: string;
 	headline?: string;
-	contentbody?: ArticleContentBodyItem[];
+	contentbody?: ArticleContentItem[];
 }
 
 export interface ArticleMainContent {
 	type: "main";
-	contentbody: ArticleContentBodyItem[];
+	contentbody: ArticleContentItem[];
 }
 
 export interface ArticleImageContent {
@@ -80,14 +74,14 @@ export interface ArticleImageContent {
 	altText?: string;
 	caption?: string;
 	thumbnail?: string;
-	contentbody?: ArticleContentBodyItem[];
+	contentbody?: ArticleContentItem[];
 }
 
 export interface ArticleLinkContent {
 	type: "link";
 	url?: string;
 	text: string;
-	contentbody?: ArticleContentBodyItem[];
+	contentbody?: ArticleContentItem[];
 }
 
 export type ArticleContentItem =
@@ -107,13 +101,6 @@ export interface ArticleItem {
 	tags: string[];
 	author: string;
 	publishedAt: string;
-}
-
-export interface SectionItem {
-	_id: string;
-	name: string;
-	description: string;
-	position: number;
 }
 
 export function getArticleImageUrl(fileName?: string): string {
@@ -138,14 +125,6 @@ export function getArticleImage(article: ArticleItem): { url: string; altText: s
 		url: getArticleImageUrl(img.url),
 		altText: img.altText || article.title,
 	};
-}
-
-export function getArticleMain(article: ArticleItem): ArticleContentBodyItem[] {
-	if (!article?.content) return [];
-	const main = article.content.find((content) => content.type === "main") as
-		| ArticleMainContent
-		| undefined;
-	return main?.contentbody || [];
 }
 
 export async function getAllArticles(): Promise<ArticleItem[]> {
