@@ -15,7 +15,13 @@ export default function LatestSection({
 		return null;
 	}
 
-	const displayArticles = articles.slice(0, 4);
+	const displayArticles = articles
+		.slice(0, 4)
+		.sort((a, b) => {
+			const timeA = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
+			const timeB = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
+			return timeB - timeA;
+		});
 
 	return (
 		<section className={"w-full"}>
