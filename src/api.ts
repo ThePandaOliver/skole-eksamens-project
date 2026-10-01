@@ -165,6 +165,37 @@ export async function getVideoById(id: string): Promise<VideoItem> {
 	return apiClient.get(`/video/${id}`).then((res) => res.data);
 }
 
+/* Contact Types & Functions */
+
+export interface ContactItem {
+	_id?: string;
+	name: string;
+	email: string;
+	subject: string;
+	message: string;
+	createdAt?: string;
+}
+
+export interface AddContactPayload {
+	name: string;
+	email: string;
+	subject: string;
+	message: string;
+}
+
+export interface AddContactResponse {
+	message: string;
+	contact?: ContactItem;
+	error?: string;
+	details?: string;
+}
+
+export async function addContact(
+	payload: AddContactPayload
+): Promise<AddContactResponse> {
+	return apiClient.post("/contact/add", payload).then((res) => res.data);
+}
+
 /* Utilities */
 
 export function formatRelativeDate(dateString?: string): string {
