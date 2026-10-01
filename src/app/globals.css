@@ -13,6 +13,7 @@
   --menu-text: #ffffff;
   --menu-hover: rgba(255, 255, 255, 0.1);
   --menu-active: #5c5c5c;
+  --weather-bg: #00BAE8;
 
   /* Typography Sizes */
   --font-size-hero: 48px;
@@ -49,6 +50,7 @@
   --color-menu-text: var(--menu-text);
   --color-menu-hover: var(--menu-hover);
   --color-menu-active: var(--menu-active);
+  --color-weather-bg: var(--weather-bg);
 
   /* Typography / Font Sizes */
   --text-hero: var(--font-size-hero);

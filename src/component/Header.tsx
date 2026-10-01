@@ -2,6 +2,7 @@
 
 import React, {useState, useEffect, useMemo} from "react";
 import Link from "next/link";
+import {usePathname} from "next/navigation";
 import {FaBars, FaMagnifyingGlass, FaX} from "react-icons/fa6";
 import {cn} from "tailwind-variants";
 
@@ -34,8 +35,14 @@ const SAMPLE_SEARCH_RESULTS: SearchResultItem[] = [
 ];
 
 export default function Header() {
+	const pathname = usePathname();
 	const [isOpen, setIsOpen] = useState(false);
 	const [searchQuery, setSearchQuery] = useState("");
+
+	const isNyheder = pathname === "/nyheder" || pathname?.startsWith("/article");
+	const isSport = pathname === "/sport";
+	const isVejret = pathname === "/vejret";
+	const isPodcast = pathname === "/podcast";
 
 	// Lock body scroll when mobile menu is open
 	useEffect(() => {
@@ -89,25 +96,37 @@ export default function Header() {
 					<nav className="hidden sm:flex items-center gap-1 sm:gap-2.5 lg:gap-4 h-full">
 						<Link
 							href="/nyheder"
-							className="text-sm md:text-lg font-semibold hover:bg-menu-hover transition-colors h-full select-none flex items-center px-1.5 sm:px-2.5 md:px-4"
+							className={cn(
+								"text-sm md:text-lg font-semibold transition-colors h-full select-none flex items-center px-1.5 sm:px-2.5 md:px-4",
+								isNyheder ? "bg-menu-active" : "hover:bg-menu-hover"
+							)}
 						>
 							Nyheder
 						</Link>
 						<Link
 							href="/sport"
-							className="text-sm md:text-lg font-semibold hover:bg-menu-hover transition-colors h-full select-none flex items-center px-1.5 sm:px-2.5 md:px-4"
+							className={cn(
+								"text-sm md:text-lg font-semibold transition-colors h-full select-none flex items-center px-1.5 sm:px-2.5 md:px-4",
+								isSport ? "bg-menu-active" : "hover:bg-menu-hover"
+							)}
 						>
 							Sport
 						</Link>
 						<Link
 							href="/vejret"
-							className="text-sm md:text-lg font-semibold hover:bg-menu-hover transition-colors h-full select-none flex items-center px-1.5 sm:px-2.5 md:px-4"
+							className={cn(
+								"text-sm md:text-lg font-semibold transition-colors h-full select-none flex items-center px-1.5 sm:px-2.5 md:px-4",
+								isVejret ? "bg-menu-active" : "hover:bg-menu-hover"
+							)}
 						>
 							Vejret
 						</Link>
 						<Link
 							href="/podcast"
-							className="text-sm md:text-lg font-semibold hover:bg-menu-hover transition-colors h-full select-none flex items-center px-1.5 sm:px-2.5 md:px-4"
+							className={cn(
+								"text-sm md:text-lg font-semibold transition-colors h-full select-none flex items-center px-1.5 sm:px-2.5 md:px-4",
+								isPodcast ? "bg-menu-active" : "hover:bg-menu-hover"
+							)}
 						>
 							Podcast
 						</Link>
@@ -191,28 +210,40 @@ export default function Header() {
 							<Link
 								href="/nyheder"
 								onClick={() => setIsOpen(false)}
-								className="text-2xl text-black hover:text-category transition-colors"
+								className={cn(
+									"text-2xl transition-colors",
+									isNyheder ? "text-category font-bold" : "text-black hover:text-category"
+								)}
 							>
 								Nyheder
 							</Link>
 							<Link
 								href="/sport"
 								onClick={() => setIsOpen(false)}
-								className="text-2xl text-black hover:text-category transition-colors"
+								className={cn(
+									"text-2xl transition-colors",
+									isSport ? "text-category font-bold" : "text-black hover:text-category"
+								)}
 							>
 								Sport
 							</Link>
 							<Link
 								href="/vejret"
 								onClick={() => setIsOpen(false)}
-								className="text-2xl text-black hover:text-category transition-colors"
+								className={cn(
+									"text-2xl transition-colors",
+									isVejret ? "text-category font-bold" : "text-black hover:text-category"
+								)}
 							>
 								Vejr
 							</Link>
 							<Link
 								href="/podcast"
 								onClick={() => setIsOpen(false)}
-								className="text-2xl text-black hover:text-category transition-colors"
+								className={cn(
+									"text-2xl transition-colors",
+									isPodcast ? "text-category font-bold" : "text-black hover:text-category"
+								)}
 							>
 								Podcast
 							</Link>

@@ -9,7 +9,7 @@ interface VideoSectionProps {
 	videos: VideoItem[];
 }
 
-function getThumbnailUrl(item: VideoItem) {
+export function getThumbnailUrl(item: VideoItem) {
 	return `${API_URL}/assets/images/${item.thumbnail}`;
 }
 
@@ -85,7 +85,7 @@ export default function VideoSection({ videos }: VideoSectionProps) {
 	);
 }
 
-function VideoComponent({video}: {video: VideoItem}) {
+export function VideoComponent({video}: {video: VideoItem}) {
 	const [isOpen, setIsOpen] = useState(false);
 	const thumbUrl = getThumbnailUrl(video);
 
