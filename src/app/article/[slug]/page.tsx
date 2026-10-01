@@ -32,7 +32,7 @@ function renderContentItem(
 	// Container item
 	if (type === "main" && Array.isArray(item.contentbody)) {
 		return (
-			<main key={key} className="space-y-6">
+			<main key={key} className={"space-y-6"}>
 				{item.contentbody.map((child, idx) =>
 					renderContentItem(
 						child,
@@ -53,25 +53,25 @@ function renderContentItem(
 		const imageUrl = getArticleImageUrl(fileName);
 
 		return (
-			<figure key={key} className="my-8">
-				<div className="relative w-full aspect-16/10 bg-neutral-100 overflow-hidden">
+			<figure key={key} className={"my-8"}>
+				<div className={"relative w-full aspect-16/10 bg-neutral-100 overflow-hidden"}>
 					<Image
 						src={imageUrl}
 						alt={imageItem.altText || imageItem.caption || articleTitle}
 						fill
 						priority={isFirstItem}
-						className="object-cover"
+						className={"object-cover"}
 					/>
 				</div>
 				{imageItem.caption && (
-					<figcaption className="text-xs text-neutral-500 italic mt-2 text-center">
+					<figcaption className={"text-xs text-neutral-500 italic mt-2 text-center"}>
 						{imageItem.caption}
 					</figcaption>
 				)}
 				{imageItem.contentbody &&
 					Array.isArray(imageItem.contentbody) &&
 					imageItem.contentbody.length > 0 && (
-						<div className="mt-4 space-y-4">
+						<div className={"mt-4 space-y-4"}>
 							{imageItem.contentbody.map((sub, i) =>
 								renderContentItem(
 									sub,
@@ -90,17 +90,17 @@ function renderContentItem(
 	if (type === "link") {
 		const linkItem = item as ArticleLinkContent;
 		return (
-			<div key={key} className="pt-4">
+			<div key={key} className={"pt-4"}>
 				<Link
 					href={linkItem.url || "#"}
-					className="text-category font-semibold hover:underline"
+					className={"text-category font-semibold hover:underline"}
 				>
 					{linkItem.text || "Læs hele historien her."}
 				</Link>
 				{linkItem.contentbody &&
 					Array.isArray(linkItem.contentbody) &&
 					linkItem.contentbody.length > 0 && (
-						<div className="mt-4 space-y-4">
+						<div className={"mt-4 space-y-4"}>
 							{linkItem.contentbody.map((sub, i) =>
 								renderContentItem(
 									sub,
@@ -123,9 +123,9 @@ function renderContentItem(
 		const hasText = Boolean(paragraphItem.text);
 
 		return (
-			<div key={key} className="space-y-3">
+			<div key={key} className={"space-y-3"}>
 				{hasHeadline && (
-					<h2 className="text-xl md:text-2xl font-bold text-black mt-8 mb-2">
+					<h2 className={"text-xl md:text-2xl font-bold text-black mt-8 mb-2"}>
 						{paragraphItem.headline}
 					</h2>
 				)}
@@ -143,7 +143,7 @@ function renderContentItem(
 				{paragraphItem.contentbody &&
 					Array.isArray(paragraphItem.contentbody) &&
 					paragraphItem.contentbody.length > 0 && (
-						<div className="space-y-4">
+						<div className={"space-y-4"}>
 							{paragraphItem.contentbody.map((sub, i) =>
 								renderContentItem(
 									sub,
@@ -159,7 +159,7 @@ function renderContentItem(
 	}
 
 	return (
-		<p className="text-5xl text-red-600 text-center w-full">
+		<p className={"text-5xl text-red-600 text-center w-full"}>
 			Ukendt content type
 		</p>
 	);
@@ -185,26 +185,26 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 	const relativeDate = formatRelativeDate(article.publishedAt);
 
 	return (
-		<div className="parent-container flex-1 space-y-6">
-			<article className="w-full">
+		<div className={"parent-container flex-1 space-y-6"}>
+			<article className={"w-full"}>
 				{/* Article Header */}
-				<header className="mb-6">
-					<h1 className="text-3xl md:text-4xl font-bold text-black mb-2">
+				<header className={"mb-6"}>
+					<h1 className={"text-3xl md:text-4xl font-bold text-black mb-2"}>
 						{article.title}
 					</h1>
 
-					<div className="text-xs mb-4">
-						<span className="text-category font-semibold capitalize">
+					<div className={"text-xs mb-4"}>
+						<span className={"text-category font-semibold capitalize"}>
 							{article.articleCategory}
 						</span>
-						<span className="text-neutral-500 font-normal">
+						<span className={"text-neutral-500 font-normal"}>
 							{" "}| {relativeDate}
 						</span>
 					</div>
 				</header>
 
 				{/* Article Body */}
-				<div className="max-w-none text-neutral-800 text-base">
+				<div className={"max-w-none text-neutral-800 text-base"}>
 					{Array.isArray(article.content) &&
 						article.content.map((item, index) =>
 							renderContentItem(

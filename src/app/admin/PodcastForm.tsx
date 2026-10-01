@@ -198,97 +198,97 @@ export default function PodcastForm({
 				className
 			)}
 		>
-			<div className="flex items-center justify-between border-b-2 border-black pb-4">
-				<h2 className="text-2xl font-bold text-black flex items-center gap-2">
+			<div className={"flex items-center justify-between border-b-2 border-black pb-4"}>
+				<h2 className={"text-2xl font-bold text-black flex items-center gap-2"}>
 					{title || defaultTitle}
 				</h2>
 				{onCancel && (
 					<button
-						type="button"
+						type={"button"}
 						onClick={onCancel}
-						aria-label="Luk"
-						className="p-2 text-black hover:bg-neutral-100 rounded-full transition-colors cursor-pointer"
+						aria-label={"Luk"}
+						className={"p-2 text-black hover:bg-neutral-100 rounded-full transition-colors cursor-pointer"}
 					>
-						<FaXmark className="text-2xl"/>
+						<FaXmark className={"text-2xl"}/>
 					</button>
 				)}
 			</div>
 
 			{formError && (
-				<div className="bg-red-50 border border-red-500 text-red-700 p-3 text-sm font-semibold">
+				<div className={"bg-red-50 border border-red-500 text-red-700 p-3 text-sm font-semibold"}>
 					{formError}
 				</div>
 			)}
 
-			<form onSubmit={handleSubmit} className="space-y-6">
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+			<form onSubmit={handleSubmit} className={"space-y-6"}>
+				<div className={"grid grid-cols-1 md:grid-cols-2 gap-6"}>
 					{/* Headline */}
-					<div className="md:col-span-2">
-						<label className="block text-sm font-bold text-black uppercase mb-1.5">
-							Titel <span className="text-category">*</span>
+					<div className={"md:col-span-2"}>
+						<label className={"block text-sm font-bold text-black uppercase mb-1.5"}>
+							Titel <span className={"text-category"}>*</span>
 						</label>
 						<input
-							type="text"
+							type={"text"}
 							value={headline}
 							onChange={(event) => setHeadline(event.target.value)}
 							required
-							className="w-full border-2 border-gray focus:border-black p-3 outline-none text-black font-medium transition-colors bg-white"
+							className={"w-full border-2 border-gray focus:border-black p-3 outline-none text-black font-medium transition-colors bg-white"}
 						/>
 					</div>
 
 					{/* Info */}
-					<div className="md:col-span-2">
-						<label className="block text-sm font-bold text-black uppercase mb-1.5">
-							Info <span className="text-category">*</span>
+					<div className={"md:col-span-2"}>
+						<label className={"block text-sm font-bold text-black uppercase mb-1.5"}>
+							Info <span className={"text-category"}>*</span>
 						</label>
 						<textarea
 							rows={4}
 							value={info}
 							required
 							onChange={(event) => setInfo(event.target.value)}
-							className="w-full border-2 border-gray focus:border-black p-3 outline-none text-black font-medium transition-colors bg-white resize-y"
+							className={"w-full border-2 border-gray focus:border-black p-3 outline-none text-black font-medium transition-colors bg-white resize-y"}
 						/>
 					</div>
 
 					{/* Release Date */}
-					<div className="md:col-span-2">
-						<label className="block text-sm font-bold text-black uppercase mb-1.5">
-							Udgivelsesdato <span className="text-category">*</span>
+					<div className={"md:col-span-2"}>
+						<label className={"block text-sm font-bold text-black uppercase mb-1.5"}>
+							Udgivelsesdato <span className={"text-category"}>*</span>
 						</label>
 						<input
-							type="date"
+							type={"date"}
 							value={releaseDate}
 							onChange={(e) => setReleaseDate(e.target.value)}
 							required
-							className="w-full border-2 border-gray focus:border-black p-3 outline-none text-black font-medium transition-colors bg-white"
+							className={"w-full border-2 border-gray focus:border-black p-3 outline-none text-black font-medium transition-colors bg-white"}
 						/>
 					</div>
 
 					{/* Audio File Input */}
 					<div>
-						<label className="block text-sm font-bold text-black uppercase mb-1.5">
-							Lydfil (MP3 / Audio) {!isEdit && <span className="text-category">*</span>}
+						<label className={"block text-sm font-bold text-black uppercase mb-1.5"}>
+							Lydfil (MP3 / Audio) {!isEdit && <span className={"text-category"}>*</span>}
 						</label>
-						<div className="border-2 border-dashed border-gray p-4 bg-neutral-50 text-center hover:border-black transition-colors">
+						<div className={"border-2 border-dashed border-gray p-4 bg-neutral-50 text-center hover:border-black transition-colors"}>
 							<input
 								ref={audioInputRef}
-								type="file"
-								accept="audio/*,.mp3,.wav,.ogg,.m4a"
+								type={"file"}
+								accept={"audio/*,.mp3,.wav,.ogg,.m4a"}
 								required={!isEdit && !podcast?.podcast}
 								onChange={handleAudioChange}
-								className="hidden"
+								className={"hidden"}
 								id={`${idPrefix}-audio-upload`}
 							/>
 							<label
 								htmlFor={`${idPrefix}-audio-upload`}
-								className="cursor-pointer flex flex-col items-center justify-center gap-2"
+								className={"cursor-pointer flex flex-col items-center justify-center gap-2"}
 							>
 								{isCalculatingAudio ? (
-									<FaSpinner className="animate-spin text-2xl text-category"/>
+									<FaSpinner className={"animate-spin text-2xl text-category"}/>
 								) : (
-									<FaMusic className="text-2xl text-neutral-500"/>
+									<FaMusic className={"text-2xl text-neutral-500"}/>
 								)}
-								<span className="text-sm font-bold text-black underline">
+								<span className={"text-sm font-bold text-black underline"}>
 									{isCalculatingAudio
 										? "Beregner varighed..."
 										: audioFile
@@ -297,7 +297,7 @@ export default function PodcastForm({
 												? "Erstat lydfil med ny"
 												: "Vælg lydfil fra computer"}
 								</span>
-								<span className="text-xs text-neutral-500">
+								<span className={"text-xs text-neutral-500"}>
 									{audioFile
 										? `${audioFile.name} (${(audioFile.size / (1024 * 1024)).toFixed(2)} MB)`
 										: "Tilladte formater: .mp3, .wav, .m4a"}
@@ -306,34 +306,34 @@ export default function PodcastForm({
 
 							{/* Audio Preview */}
 							{audioFile ? (
-								<div className="mt-3 pt-3 border-t border-gray/40 space-y-2">
+								<div className={"mt-3 pt-3 border-t border-gray/40 space-y-2"}>
 									{isEdit && (
-										<p className="text-xs font-semibold text-category">
+										<p className={"text-xs font-semibold text-category"}>
 											Ny lydfil valgt: {audioFile.name} (erstatter den gamle ved gem)
 										</p>
 									)}
 									<audio
 										controls
 										src={URL.createObjectURL(audioFile)}
-										className="w-full h-8"
+										className={"w-full h-8"}
 									/>
 									{detectedAudioDuration !== null && (
-										<p className="text-xs text-neutral-600 font-medium">
+										<p className={"text-xs text-neutral-600 font-medium"}>
 											Automatisk beregnet spilletid:{" "}
-											<span className="font-bold text-black">{formatDurationToTime(detectedAudioDuration)}</span>{" "}
+											<span className={"font-bold text-black"}>{formatDurationToTime(detectedAudioDuration)}</span>{" "}
 											({length} min)
 										</p>
 									)}
 								</div>
 							) : isEdit && podcast?.podcast ? (
-								<div className="mt-3 pt-3 border-t border-gray/40 space-y-2">
+								<div className={"mt-3 pt-3 border-t border-gray/40 space-y-2"}>
 									<audio
 										controls
 										src={getPodcastAssetUrl(podcast.podcast)}
-										className="w-full h-8"
+										className={"w-full h-8"}
 									/>
-									<p className="text-xs text-neutral-600 font-medium">
-										Nuværende spilletid: <span className="font-bold text-black">{length} min</span>
+									<p className={"text-xs text-neutral-600 font-medium"}>
+										Nuværende spilletid: <span className={"font-bold text-black"}>{length} min</span>
 									</p>
 								</div>
 							) : null}
@@ -342,50 +342,50 @@ export default function PodcastForm({
 
 					{/* Thumbnail File Input */}
 					<div>
-						<label className="block text-sm font-bold text-black uppercase mb-1.5">
-							Thumbnail {!isEdit && <span className="text-category">*</span>}
+						<label className={"block text-sm font-bold text-black uppercase mb-1.5"}>
+							Thumbnail {!isEdit && <span className={"text-category"}>*</span>}
 						</label>
-						<div className="border-2 border-dashed border-gray p-4 bg-neutral-50 text-center hover:border-black transition-colors">
+						<div className={"border-2 border-dashed border-gray p-4 bg-neutral-50 text-center hover:border-black transition-colors"}>
 							<input
 								ref={thumbnailInputRef}
-								type="file"
-								accept="image/*,.jpg,.jpeg,.png,.webp"
+								type={"file"}
+								accept={"image/*,.jpg,.jpeg,.png,.webp"}
 								required={!isEdit && !podcast?.thumbnail}
 								onChange={handleThumbnailChange}
-								className="hidden"
+								className={"hidden"}
 								id={`${idPrefix}-thumbnail-upload`}
 							/>
 							<label
 								htmlFor={`${idPrefix}-thumbnail-upload`}
-								className="cursor-pointer flex flex-col items-center justify-center gap-2"
+								className={"cursor-pointer flex flex-col items-center justify-center gap-2"}
 							>
 								{thumbnailPreview ? (
-									<div className="relative size-24 border border-gray overflow-hidden">
+									<div className={"relative size-24 border border-gray overflow-hidden"}>
 										<Image
 											src={thumbnailPreview}
-											alt="Preview"
+											alt={"Preview"}
 											fill
-											className="object-cover"
+											className={"object-cover"}
 										/>
 									</div>
 								) : (
-									<FaImage className="text-2xl text-neutral-500"/>
+									<FaImage className={"text-2xl text-neutral-500"}/>
 								)}
-								<span className="text-sm font-bold text-black underline">
+								<span className={"text-sm font-bold text-black underline"}>
 									{thumbnailFile
 										? "Skift billede"
 										: isEdit && podcast?.thumbnail
 											? "Erstat thumbnail med ny"
 											: "Vælg coverbillede fra computer"}
 								</span>
-								<span className="text-xs text-neutral-500">
+								<span className={"text-xs text-neutral-500"}>
 									{thumbnailFile
 										? `${thumbnailFile.name}`
 										: "Tilladte formater: .jpg, .png, .webp"}
 								</span>
 							</label>
 							{thumbnailFile && isEdit && (
-								<p className="text-xs font-semibold text-category mt-2">
+								<p className={"text-xs font-semibold text-category mt-2"}>
 									Nyt billede valgt: {thumbnailFile.name} (erstatter det gamle ved gem)
 								</p>
 							)}
@@ -394,25 +394,25 @@ export default function PodcastForm({
 				</div>
 
 				{/* Form Actions */}
-				<div className="flex items-center gap-4 pt-4 border-t border-gray">
+				<div className={"flex items-center gap-4 pt-4 border-t border-gray"}>
 					<button
-						type="submit"
+						type={"submit"}
 						disabled={isSubmitting || isCalculatingAudio}
-						className="bg-category text-white font-bold px-8 py-3 uppercase text-sm hover:opacity-90 active:scale-95 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+						className={"bg-category text-white font-bold px-8 py-3 uppercase text-sm hover:opacity-90 active:scale-95 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"}
 					>
 						{isSubmitting ? (
 							<>
-								<FaSpinner className="animate-spin text-sm"/>
+								<FaSpinner className={"animate-spin text-sm"}/>
 								<span>{isEdit ? "Gemmer ændringer..." : "Uploader..."}</span>
 							</>
 						) : isCalculatingAudio ? (
 							<>
-								<FaSpinner className="animate-spin text-sm"/>
+								<FaSpinner className={"animate-spin text-sm"}/>
 								<span>Beregner varighed...</span>
 							</>
 						) : (
 							<>
-								{!isEdit && <FaPlus className="text-xs"/>}
+								{!isEdit && <FaPlus className={"text-xs"}/>}
 								<span>{isEdit ? "Gem ændringer" : "Udgiv podcast"}</span>
 							</>
 						)}
@@ -421,20 +421,20 @@ export default function PodcastForm({
 					{isEdit ? (
 						onCancel && (
 							<button
-								type="button"
+								type={"button"}
 								onClick={onCancel}
 								disabled={isSubmitting || isCalculatingAudio}
-								className="border-2 border-black text-black font-bold px-6 py-3 uppercase text-sm hover:bg-neutral-100 transition-colors cursor-pointer disabled:opacity-50"
+								className={"border-2 border-black text-black font-bold px-6 py-3 uppercase text-sm hover:bg-neutral-100 transition-colors cursor-pointer disabled:opacity-50"}
 							>
 								Annuller
 							</button>
 						)
 					) : (
 						<button
-							type="button"
+							type={"button"}
 							onClick={resetForm}
 							disabled={isSubmitting || isCalculatingAudio}
-							className="border-2 border-black text-black font-bold px-6 py-3 uppercase text-sm hover:bg-black hover:text-white transition-colors cursor-pointer disabled:opacity-50"
+							className={"border-2 border-black text-black font-bold px-6 py-3 uppercase text-sm hover:bg-black hover:text-white transition-colors cursor-pointer disabled:opacity-50"}
 						>
 							Ryd felter
 						</button>

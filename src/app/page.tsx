@@ -40,7 +40,7 @@ export default async function Home() {
 			: allArticles.slice(0, 4);
 
 	return (
-		<main className="parent-container space-y-6 sm:space-y-8 md:space-y-12 flex-1">
+		<main className={"parent-container space-y-6 sm:space-y-8 md:space-y-12 flex-1"}>
 			<HeroArticlesSection articles={landingArticles} />
 			<LatestSection articles={latestArticles} />
 			<VideoSection videos={videos} />

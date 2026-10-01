@@ -75,22 +75,22 @@ export default function PodcastListTab({
 
 	return (
 		<>
-			<section className="space-y-6">
+			<section className={"space-y-6"}>
 				{/* Search Input */}
-				<div className="relative flex-1">
+				<div className={"relative flex-1"}>
 					<input
-						type="search"
+						type={"search"}
 						value={searchQuery}
 						onChange={(e) => setSearchQuery(e.target.value)}
-						placeholder="Søg..."
-						className="w-full border-2 border-gray focus:border-black p-2.5 pl-9 outline-none text-black font-medium text-sm transition-colors"
+						placeholder={"Søg..."}
+						className={"w-full border-2 border-gray focus:border-black p-2.5 pl-9 outline-none text-black font-medium text-sm transition-colors"}
 					/>
 					<FaMagnifyingGlass
-						className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 text-sm pointer-events-none"/>
+						className={"absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 text-sm pointer-events-none"}/>
 					{searchQuery && (
 						<button
 							onClick={() => setSearchQuery("")}
-							className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-black cursor-pointer text-sm"
+							className={"absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-black cursor-pointer text-sm"}
 						>
 							<FaXmark/>
 						</button>
@@ -99,42 +99,42 @@ export default function PodcastListTab({
 
 				{/* Podcasts List */}
 				{isLoading ? (
-					<div className="space-y-4">
+					<div className={"space-y-4"}>
 						<article
-							className="bg-white border-2 border-gray flex flex-col md:flex-row gap-5 items-start md:items-center"
+							className={"bg-white border-2 border-gray flex flex-col md:flex-row gap-5 items-start md:items-center"}
 						>
 							<PodcastSkeleton className={"border-none"}/>
 
 							{/* Actions */}
 							<div
-								className="flex flex-row md:flex-col p-4 gap-2 shrink-0 w-full md:w-auto justify-end animate-pulse">
+								className={"flex flex-row md:flex-col p-4 gap-2 shrink-0 w-full md:w-auto justify-end animate-pulse"}>
 								<div
-									className="w-full md:w-30 h-10 bg-neutral-200"
+									className={"w-full md:w-30 h-10 bg-neutral-200"}
 								>
 								</div>
 
 								<div
-									className="w-full md:w-30 h-10 bg-neutral-200"
+									className={"w-full md:w-30 h-10 bg-neutral-200"}
 								>
 								</div>
 							</div>
 						</article>
 					</div>
 				) : filteredPodcasts.length === 0 ? (
-					<div className="bg-white border-2 border-gray p-12 text-center space-y-4">
-						<p className="text-xl font-bold text-black">
+					<div className={"bg-white border-2 border-gray p-12 text-center space-y-4"}>
+						<p className={"text-xl font-bold text-black"}>
 							{searchQuery ? "Ingen podcasts matcher din søgning" : "Der er endnu ingen podcasts"}
 						</p>
-						<p className="text-neutral-500 text-sm">
+						<p className={"text-neutral-500 text-sm"}>
 							{searchQuery
 								? `Prøv at søge efter noget andet end "${searchQuery}".`
 								: "Opret din første podcast ved at klikke på knappen nedenfor."}
 						</p>
 						{!searchQuery && (
 							<button
-								type="button"
+								type={"button"}
 								onClick={() => setActiveTab("create")}
-								className="bg-category text-white font-bold px-6 py-2.5 text-sm uppercase hover:opacity-90 transition-opacity cursor-pointer inline-flex items-center gap-2"
+								className={"bg-category text-white font-bold px-6 py-2.5 text-sm uppercase hover:opacity-90 transition-opacity cursor-pointer inline-flex items-center gap-2"}
 							>
 								<FaPlus/>
 								<span>Tilføj podcast</span>
@@ -142,31 +142,31 @@ export default function PodcastListTab({
 						)}
 					</div>
 				) : (
-					<div className="space-y-4">
+					<div className={"space-y-4"}>
 						{filteredPodcasts.map((podcast) => {
 							return (
 								<article
 									key={podcast._id}
-									className="bg-white border-2 border-gray flex flex-col md:flex-row gap-5 items-start md:items-center"
+									className={"bg-white border-2 border-gray flex flex-col md:flex-row gap-5 items-start md:items-center"}
 								>
 									<Podcast podcast={podcast} className={"border-none"}/>
 
 									{/* Actions */}
 									<div
-										className="flex flex-row md:flex-col p-4 gap-2 shrink-0 w-full md:w-auto justify-end">
+										className={"flex flex-row md:flex-col p-4 gap-2 shrink-0 w-full md:w-auto justify-end"}>
 										<button
 											onClick={() => setEditingPodcast(podcast)}
-											className="flex-1 md:flex-initial inline-flex items-center justify-center gap-2 border-2 border-black bg-white hover:bg-black hover:text-white text-black font-bold px-4 py-2 text-sm transition-colors cursor-pointer"
+											className={"flex-1 md:flex-initial inline-flex items-center justify-center gap-2 border-2 border-black bg-white hover:bg-black hover:text-white text-black font-bold px-4 py-2 text-sm transition-colors cursor-pointer"}
 										>
-											<FaPen className="text-xs"/>
+											<FaPen className={"text-xs"}/>
 											<span>Rediger</span>
 										</button>
 
 										<button
 											onClick={() => setPodcastToDelete(podcast)}
-											className="flex-1 md:flex-initial inline-flex items-center justify-center gap-2 border-2 border-red-600 bg-white hover:bg-red-600 hover:text-white text-red-600 font-bold px-4 py-2 text-sm transition-colors cursor-pointer"
+											className={"flex-1 md:flex-initial inline-flex items-center justify-center gap-2 border-2 border-red-600 bg-white hover:bg-red-600 hover:text-white text-red-600 font-bold px-4 py-2 text-sm transition-colors cursor-pointer"}
 										>
-											<FaTrash className="text-xs"/>
+											<FaTrash className={"text-xs"}/>
 											<span>Slet</span>
 										</button>
 									</div>
@@ -180,9 +180,9 @@ export default function PodcastListTab({
 			{/* Edit Modal */}
 			{editingPodcast && (
 				<div
-					className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+					className={"fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"}>
 					<div
-						className="bg-white border-4 border-black w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 md:p-8 space-y-6 shadow-2xl">
+						className={"bg-white border-4 border-black w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 md:p-8 space-y-6 shadow-2xl"}>
 						<PodcastForm
 							podcast={editingPodcast}
 							onCancel={() => setEditingPodcast(null)}
@@ -197,26 +197,26 @@ export default function PodcastListTab({
 
 			{/* Delete Confirmation dialog */}
 			{podcastToDelete && (
-				<div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
-					<div className="bg-white border-4 border-red-600 w-full max-w-md p-6 space-y-5 shadow-2xl">
-						<div className="flex items-center gap-3 text-red-600">
-							<FaTrash className="text-2xl"/>
-							<h3 className="text-xl font-bold text-black">
+				<div className={"fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4"}>
+					<div className={"bg-white border-4 border-red-600 w-full max-w-md p-6 space-y-5 shadow-2xl"}>
+						<div className={"flex items-center gap-3 text-red-600"}>
+							<FaTrash className={"text-2xl"}/>
+							<h3 className={"text-xl font-bold text-black"}>
 								Slet podcast?
 							</h3>
 						</div>
 
-						<p className="text-neutral-700 text-sm">
+						<p className={"text-neutral-700 text-sm"}>
 							Er du sikker på, at du vil slette episoden{" "}
-							<span className="font-bold text-black">&quot;{podcastToDelete.headline}&quot;</span>?
+							<span className={"font-bold text-black"}>&quot;{podcastToDelete.headline}&quot;</span>?
 							Denne handling kan ikke fortrydes, og tilhørende lyd- og billedfiler fjernes fra serveren.
 						</p>
 
-						<div className="flex items-center justify-end gap-3 pt-3 border-t border-gray">
+						<div className={"flex items-center justify-end gap-3 pt-3 border-t border-gray"}>
 							<button
 								onClick={() => setPodcastToDelete(null)}
 								disabled={isDeleting}
-								className="border-2 border-black px-5 py-2 font-bold text-sm hover:bg-neutral-100 transition-colors cursor-pointer disabled:opacity-50"
+								className={"border-2 border-black px-5 py-2 font-bold text-sm hover:bg-neutral-100 transition-colors cursor-pointer disabled:opacity-50"}
 							>
 								Annuller
 							</button>
@@ -224,16 +224,16 @@ export default function PodcastListTab({
 							<button
 								onClick={handleConfirmDelete}
 								disabled={isDeleting}
-								className="bg-red-600 text-white font-bold px-5 py-2 text-sm uppercase hover:bg-red-700 transition-colors flex items-center gap-2 cursor-pointer disabled:opacity-50"
+								className={"bg-red-600 text-white font-bold px-5 py-2 text-sm uppercase hover:bg-red-700 transition-colors flex items-center gap-2 cursor-pointer disabled:opacity-50"}
 							>
 								{isDeleting ? (
 									<>
-										<FaSpinner className="animate-spin text-sm"/>
+										<FaSpinner className={"animate-spin text-sm"}/>
 										<span>Sletter...</span>
 									</>
 								) : (
 									<>
-										<FaTrash className="text-xs"/>
+										<FaTrash className={"text-xs"}/>
 										<span>Ja, slet podcast</span>
 									</>
 								)}

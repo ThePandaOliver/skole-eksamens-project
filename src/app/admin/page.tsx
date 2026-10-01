@@ -45,43 +45,43 @@ export default function AdminPage() {
 	}, []);
 
 	return (
-		<main className="parent-container space-y-8 flex-1">
+		<main className={"parent-container space-y-8 flex-1"}>
 			{/* Notification Banners */}
 			{successMessage && (
 				<div
 					className={"bg-neutral-900 border-2 border-category text-white p-4 flex items-center justify-between gap-3"}>
-					<div className="flex items-center gap-3">
-						<FaCircleCheck className="text-category text-xl shrink-0"/>
-						<p className="text-sm md:text-base font-semibold">{successMessage}</p>
+					<div className={"flex items-center gap-3"}>
+						<FaCircleCheck className={"text-category text-xl shrink-0"}/>
+						<p className={"text-sm md:text-base font-semibold"}>{successMessage}</p>
 					</div>
 					<button
 						onClick={() => setSuccessMessage(null)}
-						className="p-1 text-gray hover:text-white transition-colors cursor-pointer"
+						className={"p-1 text-gray hover:text-white transition-colors cursor-pointer"}
 					>
-						<FaXmark className="text-lg"/>
+						<FaXmark className={"text-lg"}/>
 					</button>
 				</div>
 			)}
 
 			{error && (
 				<div
-					className="bg-red-50 border-2 border-red-600 text-red-900 p-4 flex items-center justify-between gap-3">
-					<div className="flex items-center gap-3">
-						<FaCircleExclamation className="text-red-600 text-xl shrink-0"/>
-						<p className="text-sm md:text-base font-medium">{error}</p>
+					className={"bg-red-50 border-2 border-red-600 text-red-900 p-4 flex items-center justify-between gap-3"}>
+					<div className={"flex items-center gap-3"}>
+						<FaCircleExclamation className={"text-red-600 text-xl shrink-0"}/>
+						<p className={"text-sm md:text-base font-medium"}>{error}</p>
 					</div>
 					<button
 						onClick={() => setError(null)}
-						className="p-1 text-red-600 hover:text-red-900 transition-colors cursor-pointer"
+						className={"p-1 text-red-600 hover:text-red-900 transition-colors cursor-pointer"}
 					>
-						<FaXmark className="text-lg"/>
+						<FaXmark className={"text-lg"}/>
 					</button>
 				</div>
 			)}
 
 
 			{/* Tabs */}
-			<section className="flex border-b-2 border-black gap-2">
+			<section className={"flex border-b-2 border-black gap-2"}>
 				<button
 					onClick={() => setActiveTab("list")}
 					className={cn(
@@ -94,7 +94,7 @@ export default function AdminPage() {
 					Alle podcasts ({podcasts.length})
 				</button>
 				<button
-					type="button"
+					type={"button"}
 					onClick={() => setActiveTab("create")}
 					className={cn("px-5 py-3 font-bold text-sm md:text-base flex items-center gap-2 transition-colors cursor-pointer",
 						activeTab === "create"
@@ -102,7 +102,7 @@ export default function AdminPage() {
 							: "bg-neutral-100 text-black hover:bg-neutral-200"
 					)}
 				>
-					<FaPlus className="text-xs"/>
+					<FaPlus className={"text-xs"}/>
 					<span>Tilføj ny podcast</span>
 				</button>
 			</section>

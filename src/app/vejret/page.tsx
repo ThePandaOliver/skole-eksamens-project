@@ -50,7 +50,7 @@ export default async function VejretPage() {
 	).slice(0, 2);
 
 	return (
-		<main className="parent-container space-y-6 sm:space-y-8 md:space-y-12 flex-1">
+		<main className={"parent-container space-y-6 sm:space-y-8 md:space-y-12 flex-1"}>
 			{/* Top Hero Articles Section */}
 			<HeroArticlesSection articles={heroArticles} />
 
