@@ -15,7 +15,6 @@ interface PodcastCreateTabProps {
 export default function PodcastCreateTab({setSuccessMessage, setActiveTab, refetchPodcasts}: PodcastCreateTabProps) {
 	// Create Form State
 	const [createHeadline, setCreateHeadline] = useState("");
-	const [createSubtitle, setCreateSubtitle] = useState("");
 	const [createContent, setCreateContent] = useState<string>("");
 	const [createLength, setCreateLength] = useState<string>("30");
 	const [createReleaseDate, setCreateReleaseDate] = useState<string>(formatDateForInput());
@@ -63,7 +62,6 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab, refet
 
 	function resetCreateForm() {
 		setCreateHeadline("");
-		setCreateSubtitle("");
 		setCreateContent("");
 		setCreateLength("30");
 		setCreateReleaseDate(formatDateForInput());
@@ -85,10 +83,6 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab, refet
 
 		if (!createHeadline.trim()) {
 			setCreateFormError("Angiv venligst en titel.");
-			return;
-		}
-		if (!createSubtitle.trim()) {
-			setCreateFormError("Angiv venligst en undertekst.");
 			return;
 		}
 		if (!createAudioFile) {
@@ -114,7 +108,6 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab, refet
 			setIsSubmittingCreate(true);
 			const formData = new FormData();
 			formData.append("headline", createHeadline.trim());
-			formData.append("subtitle", createSubtitle.trim());
 			formData.append("info", createContent.trim());
 			formData.append("length", lengthNum.toString());
 			formData.append("releaseDate", createReleaseDate);
@@ -165,24 +158,10 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab, refet
 						/>
 					</div>
 
-					{/* Subtitle */}
+					{/* Info */}
 					<div className="md:col-span-2">
 						<label className="block text-sm font-bold text-black uppercase mb-1.5">
-							Undertekst <span className="text-category">*</span>
-						</label>
-						<input
-							type="text"
-							value={createSubtitle}
-							onChange={(event) => setCreateSubtitle(event.target.value)}
-							required
-							className="w-full border-2 border-gray focus:border-black p-3 outline-none text-black font-medium transition-colors bg-white"
-						/>
-					</div>
-
-					{/* Description */}
-					<div className="md:col-span-2">
-						<label className="block text-sm font-bold text-black uppercase mb-1.5">
-							Beskrivelse  <span className="text-category">*</span>
+							Info  <span className="text-category">*</span>
 						</label>
 						<textarea
 							rows={4}

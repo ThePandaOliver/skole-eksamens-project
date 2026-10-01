@@ -259,123 +259,109 @@ export function Podcast({
 				</audio>
 			)}
 
-			<div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-				{/* Left Column */}
-				<div className={cn(
-					"col-span-7 flex flex-col sm:flex-row items-stretch gap-4",
-					(!showContentText || !podcast.contentText) && "col-span-full"
-				)}>
-					{/* Thumbnail */}
-					<div className="relative size-50 shrink-0 bg-neutral-100 overflow-hidden self-center">
-						{thumbnailSrc ? (
-							<Image
-								src={thumbnailSrc}
-								alt={podcast.headline}
-								fill
-								className="w-full h-full object-cover block"
-							/>
-						) : (
-							<div
-								className="w-full h-full flex items-center justify-center text-neutral-400 font-bold text-xs uppercase p-2 text-center bg-neutral-100">
-								Intet billede
-							</div>
-						)}
+			<div className={"col-span-7 flex flex-col sm:flex-row items-stretch gap-4"}>
+				{/* Thumbnail */}
+				<div className="relative size-50 shrink-0 bg-neutral-100 overflow-hidden self-center">
+					{thumbnailSrc ? (
+						<Image
+							src={thumbnailSrc}
+							alt={podcast.headline}
+							fill
+							className="w-full h-full object-cover block"
+						/>
+					) : (
+						<div
+							className="w-full h-full flex items-center justify-center text-neutral-400 font-bold text-xs uppercase p-2 text-center bg-neutral-100">
+							Intet billede
+						</div>
+					)}
+				</div>
+
+				<div className="flex-1 flex flex-col min-w-0">
+					{/* Title and Subtitle */}
+					<div className="h-full">
+						<h3 className="font-bold text-xl text-black truncate">
+							{podcast.headline}
+						</h3>
+						<p className="text-base text-neutral-600 truncate">
+							{podcast.info}
+						</p>
 					</div>
 
-					{/* Center Column */}
-					<div className="flex-1 flex flex-col min-w-0">
-						{/* Title and subtitle */}
-						<div className="h-full">
-							<h3 className="font-bold text-xl text-black truncate">
-								{podcast.headline}
-							</h3>
-							<p className="text-base text-neutral-600 truncate">
-								{podcast.subtitle || ""}
-							</p>
+					{/* Controls */}
+					<div className="flex items-center justify-center gap-2.5 relative">
+						{/* Rewind 10s */}
+						<button
+							type="button"
+							onClick={handleRewind}
+							title="Spol 10 sekunder tilbage"
+							className="p-1 text-black hover:text-category active:scale-95 transition-all cursor-pointer"
+						>
+							<FaBackward/>
+						</button>
+
+						<button
+							type="button"
+							onClick={togglePlay}
+							className={"w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-gray flex items-center justify-center hover:border-black active:scale-90 transition-all bg-white cursor-pointer shadow-xs"}
+						>
+							{isLoading ? (
+								<FaSpinner className="animate-spin"/>
+							) : isPlaying ? (
+								<FaPause/>
+							) : (
+								<FaPlay/>
+							)}
+						</button>
+
+						{/* Forward 10s */}
+						<button
+							type="button"
+							onClick={handleForward}
+							title="Spol 10 sekunder frem"
+							className="p-1 text-black hover:text-category active:scale-95 transition-all cursor-pointer"
+						>
+							<FaForward/>
+						</button>
+					</div>
+
+					{errorMessage && (
+						<p className="text-[11px] text-red-600 text-center font-medium">
+							{errorMessage}
+						</p>
+					)}
+
+					{/* Timeline */}
+					<div className="w-full pb-0.5">
+						<div
+							className="flex justify-between items-center text-sm font-semibold text-black mb-1 select-none">
+							<span>{formatDurationToTime(currentTime)}</span>
+							<span>{formatDurationToTime(duration)}</span>
 						</div>
 
-						{/* Controls */}
-						<div className="flex items-center justify-center gap-2.5 relative">
-							{/* Rewind 10s */}
-							<button
-								type="button"
-								onClick={handleRewind}
-								title="Spol 10 sekunder tilbage"
-								className="p-1 text-black hover:text-category active:scale-95 transition-all cursor-pointer"
-							>
-								<FaBackward/>
-							</button>
+						<div
+							ref={progressBarRef}
+							onMouseDown={handleMouseDown}
+							className="relative flex items-end justify-between h-5 cursor-pointer group py-1 select-none"
+						>
+							{Array.from({length: BAR_COUNT}).map((_, i) => {
+								const isPlayed = i < activeBarCount;
+								const isCurrent = i === activeBarCount;
 
-							<button
-								type="button"
-								onClick={togglePlay}
-								className={"w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-gray flex items-center justify-center hover:border-black active:scale-90 transition-all bg-white cursor-pointer shadow-xs"}
-							>
-								{isLoading ? (
-									<FaSpinner className="animate-spin"/>
-								) : isPlaying ? (
-									<FaPause/>
-								) : (
-									<FaPlay/>
-								)}
-							</button>
-
-							{/* Forward 10s */}
-							<button
-								type="button"
-								onClick={handleForward}
-								title="Spol 10 sekunder frem"
-								className="p-1 text-black hover:text-category active:scale-95 transition-all cursor-pointer"
-							>
-								<FaForward/>
-							</button>
-						</div>
-
-						{errorMessage && (
-							<p className="text-[11px] text-red-600 text-center font-medium">
-								{errorMessage}
-							</p>
-						)}
-
-						{/* Timeline */}
-						<div className="w-full pb-0.5">
-							<div
-								className="flex justify-between items-center text-sm font-semibold text-black mb-1 select-none">
-								<span>{formatDurationToTime(currentTime)}</span>
-								<span>{formatDurationToTime(duration)}</span>
-							</div>
-
-							<div
-								ref={progressBarRef}
-								onMouseDown={handleMouseDown}
-								className="relative flex items-end justify-between h-5 cursor-pointer group py-1 select-none"
-							>
-								{Array.from({length: BAR_COUNT}).map((_, i) => {
-									const isPlayed = i < activeBarCount;
-									const isCurrent = i === activeBarCount;
-
-									return (
-										<div
-											key={i}
-											className={cn(
-												"w-1 transition-all",
-												isPlayed || isCurrent ? "bg-category" : "bg-gray group-hover:bg-neutral-500",
-												isCurrent ? "h-5" : "h-4"
-											)}
-										/>
-									);
-								})}
-							</div>
+								return (
+									<div
+										key={i}
+										className={cn(
+											"w-1 transition-all",
+											isPlayed || isCurrent ? "bg-category" : "bg-gray group-hover:bg-neutral-500",
+											isCurrent ? "h-5" : "h-4"
+										)}
+									/>
+								);
+							})}
 						</div>
 					</div>
 				</div>
-
-				{/* Right Column */}
-				{showContentText && podcast.contentText && (
-					<div className="lg:col-span-5 text-neutral-500 text-base h-full">
-						<p>{podcast.contentText || ""}</p>
-					</div>
-				)}
 			</div>
 		</article>
 	);

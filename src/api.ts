@@ -13,13 +13,11 @@ const apiClient = axios.create({
 export interface PodcastItem {
 	_id?: string;
 	headline: string;
-	subtitle?: string;
+	info: string;
 	length: number;
 	podcast: string;
 	thumbnail?: string;
 	releaseDate: string;
-	contentText?: string;
-	info?: string;
 }
 
 export function getPodcastAssetUrl(fileName: string): string {
