@@ -16,7 +16,7 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab, refet
 	// Create Form State
 	const [createHeadline, setCreateHeadline] = useState("");
 	const [createSubtitle, setCreateSubtitle] = useState("");
-	const [createContent, setCreateContent] = useState<string | null>(null);
+	const [createContent, setCreateContent] = useState<string>("");
 	const [createLength, setCreateLength] = useState<string>("30");
 	const [createReleaseDate, setCreateReleaseDate] = useState<string>(formatDateForInput());
 	const [createAudioFile, setCreateAudioFile] = useState<File | null>(null);
@@ -115,9 +115,7 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab, refet
 			const formData = new FormData();
 			formData.append("headline", createHeadline.trim());
 			formData.append("subtitle", createSubtitle.trim());
-			if (createContent) {
-				formData.append("contentText", createContent.trim());
-			}
+			formData.append("info", createContent.trim());
 			formData.append("length", lengthNum.toString());
 			formData.append("releaseDate", createReleaseDate);
 			formData.append("podcast", createAudioFile);
@@ -161,7 +159,7 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab, refet
 						<input
 							type="text"
 							value={createHeadline}
-							onChange={(e) => setCreateHeadline(e.target.value)}
+							onChange={(event) => setCreateHeadline(event.target.value)}
 							required
 							className="w-full border-2 border-gray focus:border-black p-3 outline-none text-black font-medium transition-colors bg-white"
 						/>
@@ -175,7 +173,7 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab, refet
 						<input
 							type="text"
 							value={createSubtitle}
-							onChange={(e) => setCreateSubtitle(e.target.value)}
+							onChange={(event) => setCreateSubtitle(event.target.value)}
 							required
 							className="w-full border-2 border-gray focus:border-black p-3 outline-none text-black font-medium transition-colors bg-white"
 						/>
@@ -184,12 +182,13 @@ export default function PodcastCreateTab({setSuccessMessage, setActiveTab, refet
 					{/* Description */}
 					<div className="md:col-span-2">
 						<label className="block text-sm font-bold text-black uppercase mb-1.5">
-							Beskrivelse
+							Beskrivelse  <span className="text-category">*</span>
 						</label>
 						<textarea
 							rows={4}
-							value={createContent || ""}
-							onChange={(e) => setCreateContent(e.target.value)}
+							value={createContent}
+							required
+							onChange={(event) => setCreateContent(event.target.value)}
 							className="w-full border-2 border-gray focus:border-black p-3 outline-none text-black font-medium transition-colors bg-white resize-y"
 						/>
 					</div>
