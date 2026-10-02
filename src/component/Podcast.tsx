@@ -1,7 +1,7 @@
 "use client";
 
 import React, {Suspense, use, useCallback, useEffect, useRef, useState} from "react";
-import {FaBackward, FaChevronLeft, FaChevronRight, FaForward, FaPause, FaPlay, FaSpinner} from "react-icons/fa6";
+import {FaBackward, FaForward, FaPause, FaPlay, FaSpinner} from "react-icons/fa6";
 import {getPodcast, getPodcastAssetUrl, type PodcastItem} from "@/utils/api";
 import {cn} from "tailwind-variants";
 import Image from "next/image";
@@ -20,15 +20,53 @@ export interface AsyncPodcastProps {
 	showContentText?: boolean;
 }
 
-const BAR_COUNT = 45;
+const DEFAULT_BAR_COUNT = 50;
+const BAR_PITCH = 8;
+
+function useTimelineBarCount(initialCount = DEFAULT_BAR_COUNT) {
+	const ref = useRef<HTMLDivElement | null>(null);
+	const [barCount, setBarCount] = useState(initialCount);
+
+	useEffect(() => {
+		const element = ref.current;
+		if (!element) return;
+
+		const updateCount = (width: number) => {
+			if (width > 0) {
+				const calculated = Math.max(15, Math.floor(width / BAR_PITCH));
+				setBarCount((prev) => (prev !== calculated ? calculated : prev));
+			}
+		};
+
+		if (typeof ResizeObserver === "undefined") {
+			updateCount(element.clientWidth);
+			return;
+		}
+
+		const resizeObserver = new ResizeObserver((entries) => {
+			for (const entry of entries) {
+				const width = entry.contentRect.width || entry.target.clientWidth;
+				updateCount(width);
+			}
+		});
+
+		resizeObserver.observe(element);
+
+		return () => {
+			resizeObserver.disconnect();
+		};
+	}, []);
+
+	return [ref, barCount] as const;
+}
 
 export function Podcast({
 	podcast,
 	className,
-	showContentText = true,
+	showContentText: _showContentText = true,
 }: PodcastProps) {
 	const audioRef = useRef<HTMLAudioElement | null>(null);
-	const progressBarRef = useRef<HTMLDivElement | null>(null);
+	const [progressBarRef, barCount] = useTimelineBarCount();
 
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
@@ -163,7 +201,7 @@ export function Podcast({
 				}
 			}
 		},
-		[duration]
+		[duration, progressBarRef]
 	);
 
 	function handleMouseDown(event: React.MouseEvent<HTMLDivElement>) {
@@ -196,7 +234,7 @@ export function Podcast({
 	}
 
 	const currentRatio = duration > 0 ? currentTime / duration : 0;
-	const activeBarCount = Math.floor(currentRatio * BAR_COUNT);
+	const activeBarCount = Math.floor(currentRatio * barCount);
 
 	return (
 		<article
@@ -340,7 +378,7 @@ export function Podcast({
 							onMouseDown={handleMouseDown}
 							className={"relative flex items-end justify-between h-4 sm:h-5 cursor-pointer group py-0.5 select-none gap-px sm:gap-0.5"}
 						>
-							{Array.from({length: BAR_COUNT}).map((_, i) => {
+							{Array.from({length: barCount}).map((_, i) => {
 								const isPlayed = i < activeBarCount;
 								const isCurrent = i === activeBarCount;
 
@@ -367,6 +405,8 @@ export function PodcastSkeleton({className, showContentText = true}: {
 	className?: string;
 	showContentText?: boolean;
 }) {
+	const [skeletonBarRef, barCount] = useTimelineBarCount();
+
 	return (
 		<div
 			className={cn(
@@ -401,8 +441,11 @@ export function PodcastSkeleton({className, showContentText = true}: {
 								<div className={"h-2.5 w-6 bg-neutral-200 rounded"} />
 								<div className={"h-2.5 w-6 bg-neutral-200 rounded"} />
 							</div>
-							<div className={"flex items-end justify-between h-4 py-0.5 gap-[1px]"}>
-								{Array.from({length: BAR_COUNT}).map((_, i) => (
+							<div
+								ref={skeletonBarRef}
+								className={"flex items-end justify-between h-4 py-0.5 gap-[1px]"}
+							>
+								{Array.from({length: barCount}).map((_, i) => (
 									<div
 										key={i}
 										className={"flex-1 max-w-[3px] bg-neutral-200 h-3"}

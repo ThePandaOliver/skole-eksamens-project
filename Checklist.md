@@ -12,13 +12,13 @@
 - [X] Vejr
 - [X] Kontakt formular
 - [X] Layout (Header og Footer)
+- [X] Quiz
 
 ### Vis der er tid
 
 - [ ] Nyheder
 - [ ] Sport
 - [ ] Søg function i header
-- [ ] Quiz (Lav prioritet)
 
 ---
 
