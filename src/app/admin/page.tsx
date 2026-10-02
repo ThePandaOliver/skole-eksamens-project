@@ -94,7 +94,6 @@ export default function AdminPage() {
 					Alle podcasts ({podcasts.length})
 				</button>
 				<button
-					type={"button"}
 					onClick={() => setActiveTab("create")}
 					className={cn("px-5 py-3 font-bold text-sm md:text-base flex items-center gap-2 transition-colors cursor-pointer",
 						activeTab === "create"

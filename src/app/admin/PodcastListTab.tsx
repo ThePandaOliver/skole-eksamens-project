@@ -31,8 +31,6 @@ export default function PodcastListTab({
 	refetchPodcasts
 }: PodcastListTabProps) {
 	const [searchQuery, setSearchQuery] = useState("");
-
-	// Edit Modal State
 	const [editingPodcast, setEditingPodcast] = useState<PodcastItem | null>(null);
 
 	// Delete Confirmation State

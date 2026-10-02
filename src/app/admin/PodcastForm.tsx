@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useId, useRef, useState} from "react";
+import React, {useEffect, useId, useRef, useState} from "react";
 import Image from "next/image";
 import {FaImage, FaMusic, FaPlus, FaSpinner, FaXmark} from "react-icons/fa6";
 import {cn} from "tailwind-variants";
@@ -56,21 +56,6 @@ export default function PodcastForm({
 	const audioInputRef = useRef<HTMLInputElement | null>(null);
 	const thumbnailInputRef = useRef<HTMLInputElement | null>(null);
 
-	// Reset state during render if the podcast instance being edited changes
-	if (podcast?._id !== prevPodcastId) {
-		setPrevPodcastId(podcast?._id);
-		setHeadline(podcast?.headline || "");
-		setInfo(podcast?.info || "");
-		setLength(podcast?.length ? podcast.length.toString() : "30");
-		setReleaseDate(formatDateForInput(podcast?.releaseDate));
-		setAudioFile(null);
-		setIsCalculatingAudio(false);
-		setDetectedAudioDuration(null);
-		setThumbnailFile(null);
-		setThumbnailPreview(podcast?.thumbnail ? getPodcastAssetUrl(podcast.thumbnail) : null);
-		setFormError(null);
-	}
-
 	function resetForm() {
 		setHeadline(podcast?.headline || "");
 		setInfo(podcast?.info || "");
@@ -85,6 +70,11 @@ export default function PodcastForm({
 		if (audioInputRef.current) audioInputRef.current.value = "";
 		if (thumbnailInputRef.current) thumbnailInputRef.current.value = "";
 	}
+
+	// Reset form if podcast instance changes
+	useEffect(() => {
+		resetForm();
+	}, [podcast])
 
 	async function handleAudioChange(event: React.ChangeEvent<HTMLInputElement>) {
 		const file = event.target.files?.[0] || null;
@@ -125,28 +115,28 @@ export default function PodcastForm({
 		setFormError(null);
 
 		if (!headline.trim()) {
-			setFormError("Angiv venligst en titel.");
+			setFormError("Angiv en titel.");
 			return;
 		}
 		if (!info.trim()) {
-			setFormError("Angiv venligst en beskrivelse / info.");
+			setFormError("Angiv info.");
 			return;
 		}
 		if (!isEdit && !audioFile) {
-			setFormError("Vælg venligst en podcast-lydfil (.mp3).");
+			setFormError("Vælg en podcast-lydfil.");
 			return;
 		}
 		const lengthNum = parseInt(length, 10);
 		if (isNaN(lengthNum) || lengthNum <= 0) {
-			setFormError("Kunne ikke fastslå en gyldig varighed for podcasten.");
+			setFormError("Kunne ikke sætte en gyldig varighed for podcasten.");
 			return;
 		}
 		if (!releaseDate) {
-			setFormError("Angiv venligst en udgivelsesdato.");
+			setFormError("Angiv en udgivelsesdato.");
 			return;
 		}
 		if (!isEdit && !thumbnailFile) {
-			setFormError("Vælg venligst et thumbnail.");
+			setFormError("Vælg et thumbnail.");
 			return;
 		}
 
@@ -168,7 +158,7 @@ export default function PodcastForm({
 			if (isEdit) {
 				if (!podcast?._id) throw new Error("Mangler podcast ID til opdatering.");
 				const res = await updatePodcast(podcast._id, formData);
-				setSuccessMessage?.(res.message || `Podcast "${headline}" blev opdateret!`);
+				setSuccessMessage?.(res.message);
 				onSuccess?.();
 				if (refetchPodcasts) await refetchPodcasts();
 			} else {
@@ -297,11 +287,6 @@ export default function PodcastForm({
 												? "Erstat lydfil med ny"
 												: "Vælg lydfil fra computer"}
 								</span>
-								<span className={"text-xs text-neutral-500"}>
-									{audioFile
-										? `${audioFile.name} (${(audioFile.size / (1024 * 1024)).toFixed(2)} MB)`
-										: "Tilladte formater: .mp3, .wav, .m4a"}
-								</span>
 							</label>
 
 							{/* Audio Preview */}
@@ -309,7 +294,7 @@ export default function PodcastForm({
 								<div className={"mt-3 pt-3 border-t border-gray/40 space-y-2"}>
 									{isEdit && (
 										<p className={"text-xs font-semibold text-category"}>
-											Ny lydfil valgt: {audioFile.name} (erstatter den gamle ved gem)
+											Ny lydfil valgt: {audioFile.name}
 										</p>
 									)}
 									<audio
@@ -377,11 +362,6 @@ export default function PodcastForm({
 										: isEdit && podcast?.thumbnail
 											? "Erstat thumbnail med ny"
 											: "Vælg coverbillede fra computer"}
-								</span>
-								<span className={"text-xs text-neutral-500"}>
-									{thumbnailFile
-										? `${thumbnailFile.name}`
-										: "Tilladte formater: .jpg, .png, .webp"}
 								</span>
 							</label>
 							{thumbnailFile && isEdit && (

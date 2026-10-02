@@ -11,8 +11,6 @@ import VideoSection from "@/component/landingpage/VideoSection";
 import PodcastSection from "@/component/landingpage/PodcastSection";
 import QuizComponent from "@/component/QuizComponent";
 
-export const revalidate = 60;
-
 export default async function Home() {
 	const [landingArticles, allArticles, videos, podcasts] = await Promise.all([
 		getLandingpageArticles().catch((err) => {

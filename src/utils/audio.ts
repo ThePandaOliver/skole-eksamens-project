@@ -12,24 +12,14 @@ export function getAudioDuration(file: File | Blob): Promise<number> {
 		};
 
 		audio.onloadedmetadata = () => {
-			if (audio.duration === Infinity) {
-				audio.currentTime = Number.MAX_SAFE_INTEGER;
-				audio.ontimeupdate = () => {
-					audio.ontimeupdate = null;
-					const dur = audio.duration;
-					cleanup();
-					resolve(dur);
-				};
-			} else {
-				const dur = audio.duration;
-				cleanup();
-				resolve(dur);
-			}
+			const duration = audio.duration;
+			cleanup();
+			resolve(duration);
 		};
 
 		audio.onerror = () => {
 			cleanup();
-			reject(new Error("Kunne ikke udlæse metadata fra lydfilen."));
+			reject(new Error("Kunne ikke læse metadata fra lydfilen."));
 		};
 	});
 }
