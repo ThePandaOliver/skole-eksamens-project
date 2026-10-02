@@ -113,8 +113,7 @@ export default function ContactModal({
 				{/* Modal Header */}
 				<div className={"flex items-center justify-between border-b-2 border-black pb-4"}>
 					<h2 className={"text-2xl font-bold text-black flex items-center gap-2.5"}>
-						<FaEnvelope className={"text-category text-xl"} />
-						<span>Kontakt redaktionen</span>
+						Kontakt
 					</h2>
 					<button
 						type={"button"}
@@ -246,10 +245,7 @@ export default function ContactModal({
 										<span>Sender...</span>
 									</>
 								) : (
-									<>
-										<FaPaperPlane className={"text-xs"} />
-										<span>Send besked</span>
-									</>
+									<span>Send besked</span>
 								)}
 							</button>
 						</div>
