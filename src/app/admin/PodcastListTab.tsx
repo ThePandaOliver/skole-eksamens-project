@@ -2,7 +2,7 @@
 
 import React, {useMemo, useState} from "react";
 import {Podcast, PodcastSkeleton} from "@/component/Podcast";
-import {deletePodcast, PodcastItem} from "@/api";
+import {deletePodcast, PodcastItem} from "@/utils/api";
 import {
 	FaMagnifyingGlass,
 	FaPen,

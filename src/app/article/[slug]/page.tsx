@@ -11,7 +11,7 @@ import {
 	formatRelativeDate,
 	ArticleItem,
 	ArticleContentItem, ArticleImageContent, ArticleLinkContent, ArticleParagraphContent,
-} from "@/api";
+} from "@/utils/api";
 import LatestSection from "@/component/landingpage/LatestSection";
 import PodcastSection from "@/component/landingpage/PodcastSection";
 

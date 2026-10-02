@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from "react";
 import {FaCircleCheck, FaEnvelope, FaPaperPlane, FaSpinner, FaXmark} from "react-icons/fa6";
-import {addContact} from "@/api";
+import {addContact} from "@/utils/api";
 
 export interface ContactModalProps {
 	isOpen?: boolean;

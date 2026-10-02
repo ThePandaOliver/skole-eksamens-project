@@ -4,11 +4,12 @@ import {
 	getAllArticles,
 	getAllVideos,
 	getAllPodcast,
-} from "@/api";
+} from "@/utils/api";
 import HeroArticlesSection from "@/component/landingpage/HeroArticlesSection";
 import LatestSection from "@/component/landingpage/LatestSection";
 import VideoSection from "@/component/landingpage/VideoSection";
 import PodcastSection from "@/component/landingpage/PodcastSection";
+import QuizComponent from "@/component/QuizComponent";
 
 export const revalidate = 60;
 
@@ -45,6 +46,7 @@ export default async function Home() {
 			<LatestSection articles={latestArticles} />
 			<VideoSection videos={videos} />
 			<PodcastSection podcasts={podcasts} />
+			<QuizComponent />
 		</main>
 	);
 }

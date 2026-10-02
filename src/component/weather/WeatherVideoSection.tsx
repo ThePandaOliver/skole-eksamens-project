@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { VideoItem } from "@/api";
+import { VideoItem } from "@/utils/api";
 import { VideoComponent } from "@/component/landingpage/VideoSection";
 
 interface WeatherVideoSectionProps {

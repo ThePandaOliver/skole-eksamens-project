@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { VideoItem, formatRelativeDate, getVideoAssetUrl, API_URL } from "@/api";
+import { VideoItem, formatRelativeDate, getVideoAssetUrl, API_URL } from "@/utils/api";
 import { FaPlay, FaXmark } from "react-icons/fa6";
 
 interface VideoSectionProps {

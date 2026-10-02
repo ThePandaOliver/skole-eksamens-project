@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArticleItem, getArticleImage, getArticleLead, formatRelativeDate } from "@/api";
+import { ArticleItem, getArticleImage, getArticleLead, formatRelativeDate } from "@/utils/api";
 
 interface HeroArticlesSectionProps {
 	articles: ArticleItem[];
@@ -34,7 +34,7 @@ export default function HeroArticlesSection({
 								{article1.title}
 							</h1>
 
-							<div className={"text-xs mb-2 text-neutral-500"}>
+							<div className={"text-sm mb-2 text-neutral-500"}>
 								<span className={"text-category font-semibold capitalize"}>
 									{article1.articleCategory}
 								</span>
@@ -61,7 +61,7 @@ export default function HeroArticlesSection({
 				)}
 
 				{/* Article 2 & Article 3 */}
-				<div className={"lg:col-span-6 grid grid-cols-2 lg:flex lg:flex-col justify-between gap-3 sm:gap-4"}>
+				<div className={"lg:col-span-6 grid grid-cols-2 lg:flex lg:flex-col justify-between gap-3 sm:gap-4 lg:mt-14"}>
 					{article2 && (
 						<article className={"flex-1 flex group"}>
 							<Link
@@ -83,15 +83,15 @@ export default function HeroArticlesSection({
 
 								<div className={"order-2 lg:order-1 flex-1 flex flex-col-reverse lg:flex-col justify-between py-0.5"}>
 									<div className={"flex flex-col"}>
-										<h2 className={"font-bold text-sm sm:text-base lg:text-lg text-black group-hover:text-category transition-colors line-clamp-2"}>
+										<h2 className={"font-bold text-sm sm:text-base lg:text-lg text-black group-hover:text-category transition-colors"}>
 											{article2.title}
 										</h2>
-										<p className={"text-xs sm:text-sm text-neutral-600 mt-1 line-clamp-2 sm:line-clamp-3"}>
+										<p className={"text-base sm:text-lg text-neutral-600 mt-1"}>
 											{getArticleLead(article2)}
 										</p>
 									</div>
 
-									<div className={"text-xs block text-neutral-500"}>
+									<div className={"text-sm block text-neutral-500"}>
 										<span className={"text-category font-semibold capitalize"}>
 											{article2.articleCategory}
 										</span>
@@ -105,7 +105,7 @@ export default function HeroArticlesSection({
 					)}
 
 					{article3 && (
-						<article className={"flex-1 flex group pt-0 lg:pt-2 border-t-0 lg:border-t lg:border-neutral-100"}>
+						<article className={"flex-1 flex group"}>
 							<Link
 								href={`/article/${article3.slug}`}
 								className={"flex flex-col lg:flex-row justify-between gap-2 sm:gap-3 lg:gap-4 w-full"}
@@ -125,15 +125,15 @@ export default function HeroArticlesSection({
 
 								<div className={"order-2 lg:order-1 flex-1 flex flex-col-reverse lg:flex-col justify-between py-0.5"}>
 									<div className={"flex flex-col"}>
-										<h2 className={"font-bold text-sm sm:text-base lg:text-lg text-black group-hover:text-category transition-colors line-clamp-2"}>
+										<h2 className={"font-bold text-sm sm:text-base lg:text-lg text-black group-hover:text-category transition-colors"}>
 											{article3.title}
 										</h2>
-										<p className={"text-xs sm:text-sm text-neutral-600 mt-1 line-clamp-2 sm:line-clamp-3"}>
+										<p className={"text-base sm:text-lg text-neutral-600 mt-1"}>
 											{getArticleLead(article3)}
 										</p>
 									</div>
 
-									<div className={"text-xs block text-neutral-500"}>
+									<div className={"text-sm block text-neutral-500"}>
 										<span className={"text-category font-semibold capitalize"}>
 											{article3.articleCategory}
 										</span>

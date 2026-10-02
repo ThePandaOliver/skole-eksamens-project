@@ -1,5 +1,5 @@
 import React from "react";
-import { getLandingpageArticles, getAllArticles, getAllVideos } from "@/api";
+import { getLandingpageArticles, getAllArticles, getAllVideos } from "@/utils/api";
 import HeroArticlesSection from "@/component/landingpage/HeroArticlesSection";
 import WeatherSection from "@/component/weather/WeatherSection";
 import WeatherVideoSection from "@/component/weather/WeatherVideoSection";

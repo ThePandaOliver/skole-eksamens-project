@@ -1,7 +1,7 @@
 "use client";
 import {FaCircleCheck, FaCircleExclamation, FaPlus, FaXmark} from "react-icons/fa6";
 import React, {useEffect, useState} from "react";
-import {getAllPodcast, PodcastItem} from "@/api";
+import {getAllPodcast, PodcastItem} from "@/utils/api";
 import {cn} from "tailwind-variants";
 import PodcastCreateTab from "@/app/admin/PodcastCreateTab";
 import PodcastListTab from "@/app/admin/PodcastListTab";

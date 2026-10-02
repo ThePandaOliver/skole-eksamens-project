@@ -2,7 +2,7 @@
 
 import React, {Suspense, use, useCallback, useEffect, useRef, useState} from "react";
 import {FaBackward, FaChevronLeft, FaChevronRight, FaForward, FaPause, FaPlay, FaSpinner} from "react-icons/fa6";
-import {getPodcast, getPodcastAssetUrl, type PodcastItem} from "@/api";
+import {getPodcast, getPodcastAssetUrl, type PodcastItem} from "@/utils/api";
 import {cn} from "tailwind-variants";
 import Image from "next/image";
 import {formatDurationToTime} from "@/utils/audio";

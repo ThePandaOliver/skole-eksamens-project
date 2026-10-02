@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Podcast } from "@/component/Podcast";
-import { PodcastItem } from "@/api";
+import { PodcastItem } from "@/utils/api";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
 interface PodcastSectionProps {

@@ -1,5 +1,5 @@
 import {Podcast} from "@/component/Podcast";
-import {getAllPodcast} from "@/api";
+import {getAllPodcast} from "@/utils/api";
 import Image from "next/image";
 
 export default async function Page() {

@@ -4,7 +4,7 @@ import React, {useId, useRef, useState} from "react";
 import Image from "next/image";
 import {FaImage, FaMusic, FaPlus, FaSpinner, FaXmark} from "react-icons/fa6";
 import {cn} from "tailwind-variants";
-import {addPodcast, getPodcastAssetUrl, PodcastItem, updatePodcast} from "@/api";
+import {addPodcast, getPodcastAssetUrl, PodcastItem, updatePodcast} from "@/utils/api";
 import {formatDateForInput} from "@/app/admin/page";
 import {formatDurationToTime, getAudioDuration} from "@/utils/audio";
 

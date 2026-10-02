@@ -196,6 +196,36 @@ export async function addContact(
 	return apiClient.post("/contact/add", payload).then((res) => res.data);
 }
 
+/* Quiz Types & Functions */
+
+export interface QuizItem {
+	_id?: string;
+	feedback: {
+		correct: string;
+		incorrect: string;
+	};
+	questions: QuizQuestion[];
+}
+
+export interface QuizQuestion {
+	_id?: string;
+	question: string;
+	image: string;
+	releaseDate: string;
+	answers: QuizAnswer[];
+}
+
+export interface QuizAnswer {
+	_id?: string;
+	text: string;
+	isCorrect: boolean;
+	count: number;
+}
+
+export async function getQuiz(): Promise<QuizItem[]> {
+	return apiClient.get("/quiz").then((res) => res.data);
+}
+
 /* Utilities */
 
 export function formatRelativeDate(dateString?: string): string {
@@ -210,4 +240,15 @@ export function formatRelativeDate(dateString?: string): string {
 	if (diffDays <= 0) return "i dag";
 	if (diffDays === 1) return "1 dag siden";
 	return `${diffDays} dage siden`;
+}
+
+export function getImageAssetUrl(fileName?: string): string {
+	if (!fileName) return "";
+	if (fileName.startsWith("http://") || fileName.startsWith("https://")) {
+		return fileName;
+	}
+	if (fileName.startsWith("/")) {
+		return `${API_URL}${fileName}`;
+	}
+	return `${API_URL}/assets/images/${fileName}`;
 }
