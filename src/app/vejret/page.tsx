@@ -4,8 +4,7 @@ import HeroArticlesSection from "@/component/landingpage/HeroArticlesSection";
 import WeatherSection from "@/component/weather/WeatherSection";
 import WeatherVideoSection from "@/component/weather/WeatherVideoSection";
 import { getWeatherData, WeatherData } from "@/utils/weather";
-
-export const revalidate = 60;
+import QuizComponent from "@/component/QuizComponent";
 
 export default async function VejretPage() {
 	let weatherData: WeatherData | null = null;
@@ -35,30 +34,17 @@ export default async function VejretPage() {
 		weatherError = message;
 	}
 
-	// Use top 3 articles for HeroArticlesSection as shown in the design
 	const baseArticles = landingArticles.length >= 3 ? landingArticles : allArticles;
 	const heroArticles = baseArticles.slice(0, 3);
 
-	// Select 2 videos for the weather video section (matching design)
-	const environmentalVideos = allVideos.filter((v) =>
-		v.headline.toLowerCase().includes("environmental")
-	);
-	const weatherVideos = (
-		environmentalVideos.length >= 2
-			? environmentalVideos
-			: [...environmentalVideos, ...allVideos]
-	).slice(0, 2);
+	const weatherVideos = allVideos.slice(0, 2);
 
 	return (
 		<main className={"parent-container space-y-6 sm:space-y-8 md:space-y-12 flex-1"}>
-			{/* Top Hero Articles Section */}
 			<HeroArticlesSection articles={heroArticles} />
-
-			{/* Responsive Weather Section (shows data or error UI) */}
 			<WeatherSection data={weatherData} error={weatherError} />
-
-			{/* Videos Section reusing VideoComponent */}
 			<WeatherVideoSection videos={weatherVideos} />
+			<QuizComponent/>
 		</main>
 	);
 }
