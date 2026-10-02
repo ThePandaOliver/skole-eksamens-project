@@ -141,9 +141,6 @@ export default function ContactModal({
 							<h3 className={"text-2xl font-bold text-black"}>
 								Tak for din besked!
 							</h3>
-							<p className={"text-neutral-600 text-sm max-w-md mx-auto"}>
-								Vi har modtaget din henvendelse. Vores redaktion vil gennemgå den snarest muligt.
-							</p>
 						</div>
 
 						<div className={"flex items-center justify-center gap-3 pt-4 border-t border-gray"}>
